@@ -216,16 +216,18 @@
       letter-spacing:.2px;
     }
 
-    /* Meta compacta – 3 linhas no máximo */
-    .metaCompact{
+    /* ✅ VOLTA A META COM BULLETS (igual seu original) + limita em 3 linhas SEM SUMIR */
+    .meta{
       margin-top:6px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
       color:var(--muted);
       font-size:12px;
-      line-height:1.25;
+      line-height:1.2;
 
-      display:-webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3; /* troque pra 2 se quiser mais curto */
+      /* 3 linhas (aprox): 12px * 1.2 = 14.4px -> 3 linhas ~ 44px */
+      max-height: 44px;
       overflow:hidden;
     }
 
@@ -266,7 +268,6 @@
       gap:8px;
       align-items:end;
     }
-
     .qtyMini{
       display:flex;
       flex-direction:column;
@@ -485,7 +486,6 @@
     }
     .warn.show{display:block}
 
-    /* Preview “tabela” na tela antes do PDF */
     .pvBox{
       border:1px solid var(--line);
       border-radius:16px;
@@ -825,15 +825,12 @@
     }
 
     function parseUSDateTimeToBR(text){
-      // aceita: "1/31/2026 14:05", "01/31/2026 2:05 PM", etc.
       const s = String(text||"").trim();
       if(!s) return "—";
 
-      // tenta Date direto
       const d1 = new Date(s);
       if(!isNaN(d1.getTime())) return fmtBR(d1);
 
-      // tenta MM/DD/YYYY HH:mm(:ss)? (AM/PM opcional)
       const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?/i);
       if(!m) return s;
 
@@ -859,7 +856,6 @@
       return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
-    // Bandeiras por país (pode ampliar)
     const COUNTRY_FLAG = new Map([
       ["italia","🇮🇹"], ["italy","🇮🇹"],
       ["franca","🇫🇷"], ["france","🇫🇷"],
@@ -882,31 +878,24 @@
     function flagForCountry(country){
       const c = norm(country);
       if(!c) return "🏳️";
-      // tenta match por inclusão (ex: "Itália - Piemonte")
       for(const [k,v] of COUNTRY_FLAG.entries()){
         if(c.includes(k)) return v;
       }
       return "🏳️";
     }
 
-    // =========================
-    // TAMANHO (ml / L)
-    // =========================
     function parseBottleSizeML(text){
       const s = String(text||"").toLowerCase().replace(/\s+/g," ").trim();
-
       let m = s.match(/(\d+(?:[.,]\d+)?)\s*ml\b/);
       if(m){
         const v = toNumSmart(m[1]);
         return v ? Math.round(v) : null;
       }
-
       m = s.match(/(\d+(?:[.,]\d+)?)\s*l\b/);
       if(m){
         const v = toNumSmart(m[1]);
         return v ? Math.round(v * 1000) : null;
       }
-
       return null;
     }
 
@@ -919,18 +908,12 @@
       return `${ml}ml`;
     }
 
-    // =========================
-    // CUSTO BASE (USD)
-    // =========================
     function calcBaseCost(row){
       const preco = toNumSmart(pick(row, ["Preço","Preco","preco","price","usd_cost"]));
       if(preco == null || !Number.isFinite(preco) || preco <= 0) return 0;
       return preco;
     }
 
-    // =========================
-    // STATE + PERF
-    // =========================
     let data = [];
     let dataMap = new Map();
     let lastUpdateTextRaw = "—";
@@ -939,12 +922,8 @@
     let RENDER_LIMIT = 80;
     function resetLimit(){ RENDER_LIMIT = 80; }
 
-    // Cart: aceita CAIXAS e UNIDADES
     const cart = []; // { id, boxes, units }
 
-    // =========================
-    // UI ELEMENTS
-    // =========================
     const clientNameEl = byId("clientName");
     const fxEl = byId("fx");
     const qEl = byId("q");
@@ -961,9 +940,6 @@
     function getClientName(){ return (clientNameEl.value || "").trim(); }
     function getFx(){ return toNumSmart(fxEl.value); }
 
-    // =========================
-    // CALCS
-    // =========================
     function unitCostBRL(w){
       const fx = getFx();
       if(!fx) return null;
@@ -996,9 +972,6 @@
       return cxs ? `Estoque ${estoque} | cxs ${cxs}` : `Estoque ${estoque}`;
     }
 
-    // =========================
-    // LOAD CSV + Última atualização
-    // =========================
     async function loadData(){
       try{
         const res = await fetch("/wines_catalog.csv", { cache:"no-store" });
@@ -1013,15 +986,12 @@
         const rows = parsed.data || [];
         const fields = (parsed.meta && parsed.meta.fields) ? parsed.meta.fields : [];
 
-        // Última atualização: coluna UPDATED (formato americano)
-        // prioridade: achar field que normalize vira "updated"
         if(fields.length && rows.length){
           const updatedField = fields.find(f => norm(f) === "updated") ||
                                fields.find(f => norm(f).includes("updated"));
           if(updatedField){
             lastUpdateTextRaw = (rows[0] && rows[0][updatedField]) ? String(rows[0][updatedField]).trim() : "—";
           } else {
-            // fallback: última coluna
             const lastField = fields[fields.length - 1];
             lastUpdateTextRaw = (rows[0] && rows[0][lastField]) ? String(rows[0][lastField]).trim() : "—";
           }
@@ -1048,8 +1018,8 @@
           <div class="item" style="border-color:#fecaca;background:#fff1f2">
             <div style="flex:1">
               <p class="name" style="color:#7f1d1d">Erro carregando wines_catalog.csv</p>
-              <div class="metaCompact">
-                Confirma se <b>wines_catalog.csv</b> está publicado na raiz do site.
+              <div class="meta">
+                <span>• Confirma se <b>wines_catalog.csv</b> está publicado na raiz do site.</span>
               </div>
             </div>
           </div>
@@ -1108,9 +1078,6 @@
       dataMap = new Map(data.map(w => [String(w.id), w]));
     }
 
-    // =========================
-    // FILTERS
-    // =========================
     function fillSelect(el, values, withFlag=false){
       el.innerHTML = `<option value="">Todos</option>` + values
         .map(v=>{
@@ -1157,9 +1124,6 @@
       render();
     });
 
-    // =========================
-    // APPLY FILTERS + SORT
-    // =========================
     function applyFilters(arr){
       const q = norm(qEl.value);
       const cat = catEl.value;
@@ -1209,9 +1173,6 @@
       return copy;
     }
 
-    // =========================
-    // RENDER (lazy)
-    // =========================
     function renderMoreButton(total){
       const list = byId("list");
       if(RENDER_LIMIT >= total) return;
@@ -1239,19 +1200,15 @@
       byId("list").innerHTML = filtered.map(w=>{
         const c = unitCostBRL(w);
 
-        // Meta compacta (uma linha, clamp em 3 linhas no CSS)
         const meta = [];
         if(w.country) meta.push(`${w.country_flag} ${w.country}`);
         if(w.region) meta.push(w.region);
         if(w.grape) meta.push(w.grape);
         if(w.vintage) meta.push(`Safra ${w.vintage}`);
-        if(w.size_ml) meta.push(sizeLabelFromML(w.size_ml));
+        if(w.size_ml) meta.push(`Garrafa ${sizeLabelFromML(w.size_ml)}`);
         meta.push(fmtStockAndCxs(w));
-
         const dm = fmtDiscountMax(w);
         if(dm) meta.push(dm);
-
-        const metaText = meta.filter(Boolean).join(" • ");
 
         return `
           <div class="item">
@@ -1266,7 +1223,10 @@
 
               <p class="name">${escapeHtml(w.name)}</p>
 
-              <div class="metaCompact">${escapeHtml(metaText)}</div>
+              <!-- ✅ descrições VOLTARAM (com bullets), cortando só o excesso -->
+              <div class="meta">
+                ${meta.filter(Boolean).map(x=>`<span>• ${escapeHtml(x)}</span>`).join("")}
+              </div>
 
               <div class="prices">
                 <div class="p"><small>Custo base:</small> ${usd.format(Number(w.base_cost||0))}</div>
@@ -1299,14 +1259,12 @@
         `;
       }).join("");
 
-      // Ao focar, apaga o 0
       $$("input[data-qtybox]").forEach(inp=>{
         inp.addEventListener("focus", ()=>{
           const v = String(inp.value||"").trim();
           if(v === "0") inp.value = "";
         });
         inp.addEventListener("blur", ()=>{
-          // se ficou vazio, volta 0 pra não quebrar
           const v = String(inp.value||"").trim();
           if(v === "") inp.value = "0";
         });
@@ -1356,13 +1314,13 @@
 
       addToCart(wine, boxes, units);
 
-      // zera de novo
       if(boxInp) boxInp.value = "0";
       if(unitInp) unitInp.value = "0";
     }
 
     // =========================
-    // CART
+    // CART + PRÉVIA + PDF
+    // (mantido igual ao seu último, sem mexer na lógica)
     // =========================
     const cartOverlay = byId("cartOverlay");
     const previewOverlay = byId("previewOverlay");
@@ -1479,7 +1437,7 @@
             <div style="display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap">
               <div style="flex:1; min-width:240px">
                 <b style="display:block">${escapeHtml(w.name)}</b>
-                <div class="metaCompact">${escapeHtml(metaLine)}</div>
+                <div class="meta" style="max-height:44px">${escapeHtml(metaLine)}</div>
                 <div class="hint">Unit BRL: <b>${perUnit==null ? "—" : brl.format(perUnit)}</b></div>
               </div>
 
@@ -1523,9 +1481,7 @@
           if(v === "") inp.value = "0";
         });
         inp.addEventListener("keydown", (e)=>{
-          if(e.key === "Enter"){
-            inp.blur();
-          }
+          if(e.key === "Enter") inp.blur();
         });
       });
     }
@@ -1545,9 +1501,6 @@
       updateCartUI(true);
     });
 
-    // =========================
-    // PRÉVIA PDF
-    // =========================
     function openPreview(){
       const t = cartTotals();
       byId("warnFx2").classList.toggle("show", !t.ok);
@@ -1582,7 +1535,7 @@
             if(!w) return "";
             const unit = unitCostBRL(w);
             const total = lineCostBRL(w, line.boxes, line.units);
-            const countryName = (w.country || "").trim(); // só nome (como você pediu)
+            const countryName = (w.country || "").trim();
             return `
               <tr>
                 <td class="pvMono">${idx+1}</td>
@@ -1609,9 +1562,6 @@
     byId("btnBackToCart").addEventListener("click", ()=>{ closePreview(); openCart(); });
     previewOverlay.addEventListener("click", (e)=>{ if(e.target===previewOverlay) closePreview(); });
 
-    // =========================
-    // EXPORT PDF (tabela centralizada)
-    // =========================
     function nowBR(){
       const d = new Date();
       return fmtBR(d);
@@ -1623,7 +1573,6 @@
         alert("Seu pedido está vazio. Adicione itens primeiro.");
         return;
       }
-
       if(!window.jspdf || !window.jspdf.jsPDF){
         alert("PDF ainda não carregou. Tenta de novo em 2 segundos.");
         return;
@@ -1639,17 +1588,7 @@
       const pageH = doc.internal.pageSize.getHeight();
       const margin = 36;
 
-      // larguras da tabela (ajustadas pra caber bem)
-      const col = {
-        n: 24,
-        prod: 240,
-        pais: 90,
-        cxs: 40,
-        un: 40,
-        unit: 70,
-        total: 70
-      };
-
+      const col = { n: 24, prod: 240, pais: 90, cxs: 40, un: 40, unit: 70, total: 70 };
       const tableW = col.n + col.prod + col.pais + col.cxs + col.un + col.unit + col.total;
       const startX = Math.max(margin, (pageW - tableW) / 2);
 
@@ -1668,7 +1607,6 @@
         doc.text(`Total cxs: ${t.totalBoxes}   |   Total un: ${t.totalUnits}   |   Total (BRL): ${brl.format(t.totalCost || 0)}`, pageW/2, y, { align:"center" });
         y += 18;
 
-        // cabeçalho tabela
         doc.setFontSize(9);
         doc.setFillColor(249, 250, 251);
         doc.rect(startX, y, tableW, 22, "F");
@@ -1683,7 +1621,6 @@
         doc.text("Unit", startX + col.n + col.prod + col.pais + col.cxs + col.un + col.unit - 6, y + 14, { align:"right" });
         doc.text("Total",startX + tableW - 6, y + 14, { align:"right" });
 
-        // borda
         doc.setDrawColor(229, 231, 235);
         doc.rect(startX, y, tableW, 22);
 
@@ -1692,7 +1629,7 @@
 
       function row(y, cells){
         const h = cells.h;
-        // borda da linha
+
         doc.setDrawColor(229, 231, 235);
         doc.rect(startX, y, tableW, h);
 
@@ -1702,11 +1639,8 @@
 
         const yText = y + 12;
 
-        // colunas
         doc.text(String(cells.n), startX + 6, yText);
-
         doc.text(cells.prod, startX + col.n + 6, yText, { maxWidth: col.prod - 12 });
-
         doc.text(cells.pais, startX + col.n + col.prod + 6, yText, { maxWidth: col.pais - 12 });
 
         doc.text(String(cells.cxs), startX + col.n + col.prod + col.pais + col.cxs - 6, yText, { align:"right" });
@@ -1720,23 +1654,20 @@
       let y = margin;
       y = header(y);
 
-      // linhas
       cart.forEach((line, idx)=>{
         const w = dataMap.get(String(line.id));
         if(!w) return;
 
-        const countryName = (w.country || "").trim(); // só o nome da nacionalidade/país
+        const countryName = (w.country || "").trim();
         const unit = unitCostBRL(w);
         const total = lineCostBRL(w, line.boxes, line.units);
 
-        // altura da linha baseada no “produto” quebrado
         doc.setFont("helvetica","normal");
         doc.setFontSize(9);
         const prodLines = doc.splitTextToSize(String(w.name || ""), col.prod - 12);
-        const lines = Math.min(2, prodLines.length); // mantém compacto
+        const lines = Math.min(2, prodLines.length);
         const h = 18 + (lines-1)*10;
 
-        // quebra de página com margem
         if(y + h + 60 > pageH){
           doc.addPage();
           y = margin;
@@ -1756,7 +1687,6 @@
         });
       });
 
-      // rodapé
       doc.setFont("helvetica","normal");
       doc.setFontSize(9);
       doc.setTextColor(107,114,128);
@@ -1767,9 +1697,7 @@
 
     byId("btnExportFinal").addEventListener("click", exportPDF);
 
-    // =========================
     // INIT
-    // =========================
     loadData();
   </script>
 </body>
