@@ -1,1 +1,1505 @@
-Em manutenção
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, viewport-fit=cover" />
+  <title>Carta de Vinhos — Montagem</title>
+  <meta name="theme-color" content="#111827" />
+
+  <style>
+    :root{
+      --bg:#f4f5f7;
+      --surface:#ffffff;
+      --text:#0f172a;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+
+      --primary:#111827;
+      --primary2:#1f2937;
+      --accent:#22c55e;
+
+      --chip:#f3f4f6;
+      --shadow: 0 12px 28px rgba(15,23,42,.10);
+      --radius:16px;
+
+      --safeTop: env(safe-area-inset-top);
+      --safeBottom: env(safe-area-inset-bottom);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    button{font:inherit}
+
+    .app{
+      max-width: 860px;
+      margin: 0 auto;
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      padding-bottom: calc(92px + var(--safeBottom));
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary2) 100%);
+      color:#fff;
+      padding: calc(12px + var(--safeTop)) 14px 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    .toprow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .brand b{ font-size:16px; letter-spacing:.2px; }
+    .brand small{ font-size:12px; opacity:.9; }
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:0 0 auto;
+    }
+    .iconBtn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .iconBtn:active{transform:scale(.98)}
+
+    .content{
+      padding:12px 12px 0;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:12px;
+    }
+    @media (max-width: 840px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHeader{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      background:#fff;
+    }
+    .cardHeader h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .cardHeader p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .filters{
+      padding:12px 14px;
+      display:grid;
+      gap:10px;
+    }
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 520px){
+      .row2{ grid-template-columns: 1fr; }
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:#111827;
+      font-weight:900;
+      margin-bottom:6px;
+      letter-spacing:.2px;
+      text-transform:uppercase;
+    }
+    input, select{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#111827;
+      outline:none;
+      font-size:14px;
+    }
+
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+      line-height:1.25;
+    }
+
+    .list{
+      padding:12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .item{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding:12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:#fff;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: var(--chip);
+      border: 1px solid var(--line);
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .name{
+      margin:0;
+      font-weight:1000;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .meta{
+      margin-top:6px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.2;
+    }
+    .prices{
+      margin-top:8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:baseline;
+    }
+    .p{
+      font-weight:1100;
+      color:#16a34a;
+      white-space:nowrap;
+    }
+    .p small{
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .itemRight{
+      margin-left:auto;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+      flex:0 0 auto;
+    }
+    .unitPick{
+      width:auto;
+      min-width:86px;
+      padding:10px 10px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#111827;
+      font-size:13px;
+      font-weight:900;
+    }
+    .addBtn{
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      border:none;
+      background: var(--accent);
+      color:#052e16;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      box-shadow: 0 10px 18px rgba(34,197,94,.25);
+      -webkit-tap-highlight-color: transparent;
+      flex:0 0 auto;
+    }
+    .addBtn:active{transform:scale(.98)}
+
+    .bottomBar{
+      position:fixed;
+      left:0; right:0;
+      bottom:0;
+      z-index:40;
+      padding: 10px 12px calc(10px + var(--safeBottom));
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-top:1px solid var(--line);
+    }
+    .bottomWrap{
+      max-width:860px;
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .cartSummary{
+      flex:1 1 auto;
+      background:#111827;
+      color:#fff;
+      border-radius: 16px;
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow: var(--shadow);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cartSummary:active{transform:scale(.995)}
+    .cartSummary b{display:block;font-size:13px;opacity:.95}
+    .cartSummary span{display:block;font-size:16px;font-weight:1000;letter-spacing:-.2px}
+    .pillCount{
+      min-width:44px;
+      height:36px;
+      border-radius:999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      display:grid;
+      place-items:center;
+      font-weight:1000;
+    }
+
+    .exportBtn{
+      flex:0 0 auto;
+      border:none;
+      border-radius: 16px;
+      padding:12px 14px;
+      background: var(--accent);
+      color:#052e16;
+      font-weight:1000;
+      cursor:pointer;
+      box-shadow: 0 10px 18px rgba(34,197,94,.25);
+      -webkit-tap-highlight-color: transparent;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .exportBtn:active{transform:scale(.98)}
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(2,6,23,.55);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:60;
+      padding: 12px 12px calc(12px + var(--safeBottom));
+    }
+    .overlay.show{display:flex}
+    .sheet{
+      width:100%;
+      max-width:860px;
+      background: var(--surface);
+      border-radius: 22px;
+      border:1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      max-height: calc(100vh - 24px - var(--safeTop));
+      display:flex;
+      flex-direction:column;
+    }
+    .sheetHeader{
+      padding:14px 14px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid var(--line);
+      background: #fff;
+      flex:0 0 auto;
+    }
+    .sheetHeader b{
+      font-size:14px;
+      letter-spacing:.2px;
+      text-transform:uppercase;
+    }
+    .closeBtn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .closeBtn:active{transform:scale(.98)}
+    .sheetBody{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    .sheetFooter{
+      padding:14px;
+      border-top:1px solid var(--line);
+      display:flex;
+      gap:10px;
+      background:#fff;
+      flex:0 0 auto;
+    }
+    .btn{
+      flex:1 1 auto;
+      padding:12px 14px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:1000;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border:none;
+      color:#052e16;
+    }
+    .btn:active{transform:scale(.99)}
+
+    .cartLine{
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:flex-start;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+    }
+    .cartLine b{display:block;font-size:13px;text-transform:uppercase}
+    .cartLine small{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.25}
+    .cartRight{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:8px;
+      min-width:190px;
+    }
+    .cartPrice{
+      font-weight:1100;
+      color:#16a34a;
+      white-space:nowrap;
+    }
+    .cartMini{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .miniIcon{
+      width:34px;height:34px;border-radius:999px;border:1px solid var(--line);
+      background:#fff;display:grid;place-items:center;cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .miniIcon:active{transform:scale(.98)}
+
+    .qtyBoxWrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .qtyBoxWrap span{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+    .qtyBoxInput{
+      width:92px;
+      padding:10px 10px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      font-size:14px;
+      text-align:right;
+    }
+
+    .totals{
+      background: #f9fafb;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .totalsRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:#111827;
+      font-weight:900;
+    }
+    .totalsRow span{color:var(--muted);font-weight:800}
+    .totalsRow strong{font-weight:1100}
+    .warn{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid #fecaca;
+      background:#fff1f2;
+      color:#7f1d1d;
+      font-weight:900;
+      font-size:12px;
+      display:none;
+    }
+    .warn.show{display:block}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="topbar">
+      <div class="toprow">
+        <div class="brand">
+          <b>Carta de Vinhos — Montagem</b>
+          <small id="subTitle">Filtre e monte pedido em caixas (cxs) e unidades (un) com custo em BRL</small>
+        </div>
+        <div class="actions">
+          <button class="iconBtn" id="btnReload" type="button" title="Recarregar dados">↻</button>
+          <button class="iconBtn" id="btnOpenCart" type="button" title="Pedido (lista)">🧾</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="grid">
+
+        <section class="card">
+          <div class="cardHeader">
+            <div>
+              <h2>Configuração</h2>
+              <p id="lastUpdateLine">Última atualização: —</p>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="row2">
+              <div class="field">
+                <label>Câmbio USD → BRL</label>
+                <input id="fx" inputmode="decimal" placeholder="Ex: 5,12" />
+                <div class="hint">Use ponto ou vírgula (ex: 5.12 / 5,12).</div>
+              </div>
+              <div class="field">
+                <div class="hint" style="margin-top:22px">Custo em BRL = <b>Preço (USD)</b> × <b>câmbio</b>. (Cx usa <b>DUN Un</b> como itens por caixa.)</div>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>Buscar pelo nome</label>
+                <input id="q" placeholder="Ex: barbaresco, gaja, catena..." />
+                <div class="hint">Busca só no <b>nome/descrição</b>.</div>
+              </div>
+              <div class="field">
+                <label>Categoria</label>
+                <select id="cat"></select>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>País</label>
+                <select id="country"></select>
+              </div>
+              <div class="field">
+                <label>Uva</label>
+                <select id="grape"></select>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>Safra (ano)</label>
+                <select id="vintage"></select>
+              </div>
+              <div class="field">
+                <label>Tamanho (garrafa)</label>
+                <select id="size"></select>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>Marca</label>
+                <select id="brand"></select>
+              </div>
+              <div class="field">
+                <label>Produtor</label>
+                <select id="producer"></select>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>Estoque</label>
+                <select id="inStock">
+                  <option value="">Todos</option>
+                  <option value="1">Somente com estoque</option>
+                  <option value="0">Somente sem estoque</option>
+                </select>
+                <div class="hint">Mostra também as <b>cxs</b> (DUN Un) ao lado do estoque.</div>
+              </div>
+              <div class="field">
+                <label>Ordenar</label>
+                <select id="sort">
+                  <option value="name">Nome (A→Z)</option>
+                  <option value="usd">Custo base (menor→maior)</option>
+                  <option value="brl">Custo BRL (menor→maior)</option>
+                  <option value="stock">Estoque (maior→menor)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <button class="btn" id="btnReset" type="button">Limpar filtros</button>
+                <div class="hint">No celular carrega em blocos (não trava).</div>
+              </div>
+              <div class="field">
+                <div class="hint">Fonte dos dados: <b>wines_catalog.csv</b> (na raiz do site).</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="cardHeader">
+            <div>
+              <h2>Catálogo</h2>
+              <p>Escolha <b>cx</b> ou <b>un</b> e toque no “+”.</p>
+            </div>
+            <div class="tag" id="countTag">0 itens</div>
+          </div>
+
+          <div class="list" id="list"></div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="bottomBar">
+    <div class="bottomWrap">
+      <div class="cartSummary" id="cartSummary" role="button" aria-label="Abrir pedido">
+        <div>
+          <b id="cartMiniTitle">Pedido (cxs + un)</b>
+          <span id="cartMiniTotal">R$ 0,00</span>
+        </div>
+        <div class="pillCount" id="cartCount">0</div>
+      </div>
+
+      <button class="exportBtn" id="btnExport" type="button" title="Exportar PDF">
+        Exportar PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="overlay" id="cartOverlay" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Pedido em caixas e unidades">
+      <div class="sheetHeader">
+        <div>
+          <b>Pedido (cxs + un)</b>
+          <div class="hint">PDF sai com quantidades e custo em BRL.</div>
+        </div>
+        <button class="closeBtn" id="btnCloseCart" type="button">✕</button>
+      </div>
+
+      <div class="sheetBody">
+        <div class="warn" id="warnFx">Preencha o câmbio (USD→BRL) pra calcular o custo em BRL.</div>
+
+        <div class="totals">
+          <div class="totalsRow"><span>Caixas (cxs)</span> <strong id="cartBoxes">0</strong></div>
+          <div class="totalsRow"><span>Unidades (un)</span> <strong id="cartUnits">0</strong></div>
+          <div class="totalsRow"><span>Total custo (BRL)</span> <strong id="cartCost">R$ 0,00</strong></div>
+        </div>
+
+        <div class="hint" id="pdfMetaLine">Última atualização: —</div>
+
+        <div class="label" style="margin-top:6px">Itens</div>
+        <div id="cartList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+      <div class="sheetFooter">
+        <button class="btn" id="btnClearCart" type="button">Limpar</button>
+        <button class="btn primary" id="btnExport2" type="button">Exportar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSV parser -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script>
+    // =========================
+    // HELPERS
+    // =========================
+    const brl = new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
+    const usd = new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
+    const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+    const byId = (id) => document.getElementById(id);
+
+    function clampInt(n, min, max){ return Math.max(min, Math.min(max, n)); }
+    function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+    function uniq(arr){ return [...new Set(arr.filter(v => v!==undefined && v!==null && String(v).trim()!==""))]; }
+
+    function toNumSmart(v){
+      if (v == null) return null;
+      let s = String(v).trim();
+      if (!s) return null;
+
+      s = s.replace(/[^\d,.\-]/g,"");
+
+      const lastComma = s.lastIndexOf(",");
+      const lastDot = s.lastIndexOf(".");
+      if (lastComma !== -1 && lastDot !== -1){
+        const decimalIsComma = lastComma > lastDot;
+        if (decimalIsComma){
+          s = s.replace(/\./g,"").replace(",",".");
+        } else {
+          s = s.replace(/,/g,"");
+        }
+      } else if (lastComma !== -1){
+        const parts = s.split(",");
+        if (parts[1] && parts[1].length === 3){
+          s = parts[0] + parts[1];
+        } else {
+          s = s.replace(",",".");
+        }
+      } else if (lastDot !== -1){
+        const parts = s.split(".");
+        if (parts[1] && parts[1].length === 3){
+          s = parts[0] + parts[1];
+        }
+      }
+
+      const n = Number(s);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function svgPlus(){
+      return `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px">
+          <path d="M12 5v14M5 12h14" stroke="#052e16" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+      `;
+    }
+
+    function pick(row, keys){
+      if(!row) return null;
+
+      for (const k of keys){
+        if (row[k] != null && String(row[k]).trim() !== "") return row[k];
+      }
+
+      const rowKeys = Object.keys(row);
+      for (const want of keys){
+        const w = norm(want);
+        const found = rowKeys.find(rk => norm(rk).startsWith(w));
+        if (found && row[found] != null && String(row[found]).trim() !== "") return row[found];
+      }
+
+      return null;
+    }
+
+    // =========================
+    // TAMANHO (ml / L)
+    // =========================
+    function parseBottleSizeML(text){
+      const s = String(text||"").toLowerCase().replace(/\s+/g," ").trim();
+
+      let m = s.match(/(\d+(?:[.,]\d+)?)\s*ml\b/);
+      if(m){
+        const v = toNumSmart(m[1]);
+        return v ? Math.round(v) : null;
+      }
+
+      m = s.match(/(\d+(?:[.,]\d+)?)\s*l\b/);
+      if(m){
+        const v = toNumSmart(m[1]);
+        return v ? Math.round(v * 1000) : null;
+      }
+
+      return null;
+    }
+
+    function sizeLabelFromML(ml){
+      if(!ml) return "";
+      if(ml === 750) return "750ml";
+      if(ml === 1500) return "1,5L";
+      if(ml === 375) return "375ml";
+      if(ml === 1000) return "1L";
+      return `${ml}ml`;
+    }
+
+    // =========================
+    // CUSTO BASE (USD)
+    // =========================
+    function calcBaseCost(row){
+      const preco = toNumSmart(pick(row, ["Preço","Preco","preco","price","usd_cost"]));
+      if(preco == null || !Number.isFinite(preco) || preco <= 0) return 0;
+      return preco;
+    }
+
+    // =========================
+    // STATE + PERF
+    // =========================
+    let data = [];
+    let dataMap = new Map();
+    let lastUpdateText = "—";
+
+    let RENDER_LIMIT = 80;
+    function resetLimit(){ RENDER_LIMIT = 80; }
+
+    // Cart: aceita CAIXAS e UNIDADES
+    const cart = []; // { id, boxes, units }
+
+    // =========================
+    // UI ELEMENTS
+    // =========================
+    const fxEl = byId("fx");
+    const qEl = byId("q");
+    const catEl = byId("cat");
+    const countryEl = byId("country");
+    const grapeEl = byId("grape");
+    const vintageEl = byId("vintage");
+    const sizeEl = byId("size");
+    const brandEl = byId("brand");
+    const producerEl = byId("producer");
+    const inStockEl = byId("inStock");
+    const sortEl = byId("sort");
+
+    // =========================
+    // CALCS
+    // =========================
+    function getFx(){ return toNumSmart(fxEl.value); }
+
+    function unitCostBRL(w){
+      const fx = getFx();
+      if(!fx) return null;
+      return (Number(w.base_cost||0) * fx);
+    }
+
+    function lineCostBRL(w, boxes, units){
+      const perUnit = unitCostBRL(w);
+      if(perUnit==null) return null;
+
+      const dun = (w.dun_un != null && Number(w.dun_un) > 0) ? Number(w.dun_un) : null;
+      const unitsPerBox = dun || 1;
+
+      const b = Number(boxes || 0);
+      const u = Number(units || 0);
+
+      // custo = (cx * itensPorCx + unidades) * custoUnit
+      return perUnit * ((b * unitsPerBox) + u);
+    }
+
+    // =========================
+    // LOAD CSV + Última atualização
+    // =========================
+    async function loadData(){
+      try{
+        const res = await fetch("/wines_catalog.csv", { cache:"no-store" });
+        if(!res.ok) throw new Error("Não consegui abrir wines_catalog.csv");
+
+        const csvText = await res.text();
+        if(!window.Papa) throw new Error("PapaParse não carregou");
+
+        const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
+        if(parsed.errors && parsed.errors.length) console.warn("Erros CSV:", parsed.errors);
+
+        const rows = parsed.data || [];
+        const fields = (parsed.meta && parsed.meta.fields) ? parsed.meta.fields : [];
+
+        // Última atualização: coluna "up dated" (fallback: 1ª linha + última coluna)
+        if(fields.length && rows.length){
+          const want = fields.find(f => norm(f) === "up dated" || norm(f) === "updated");
+          if(want){
+            const v = rows[0] ? rows[0][want] : null;
+            lastUpdateText = (v && String(v).trim()) ? String(v).trim() : "—";
+          } else {
+            const lastField = fields[fields.length - 1];
+            const v = rows[0] ? rows[0][lastField] : null;
+            lastUpdateText = (v && String(v).trim()) ? String(v).trim() : "—";
+          }
+        } else {
+          lastUpdateText = "—";
+        }
+
+        byId("lastUpdateLine").textContent = `Última atualização: ${lastUpdateText}`;
+        byId("pdfMetaLine").textContent = `Última atualização: ${lastUpdateText}`;
+
+        data = rows;
+        normalizeData();
+        buildFilters();
+        resetLimit();
+        render();
+        updateCartUI(false);
+
+      }catch(err){
+        console.error(err);
+        byId("list").innerHTML = `
+          <div class="item" style="border-color:#fecaca;background:#fff1f2">
+            <div style="flex:1">
+              <p class="name" style="color:#7f1d1d">Erro carregando wines_catalog.csv</p>
+              <div class="meta">
+                <span>• Confirma se <b>wines_catalog.csv</b> está publicado na raiz do site.</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function normalizeData(){
+      const normalized = (data || []).map((w, i)=>{
+        const id = pick(w, ["Código","Codigo","id","code"]) ?? (i+1);
+
+        const name =
+          pick(w, ["Descrição","Descricao","Descri","name","Nome"]) ||
+          pick(w, ["Produto","Produ","produto"]) ||
+          "Sem nome";
+
+        const brand = pick(w, ["Marca","brand"]) || "";
+        const country = pick(w, ["País","Pais","País de","pais","country"]) || "";
+        const producer = pick(w, ["Produtor","Produ","producer"]) || "";
+
+        const category = pick(w, ["Tipo","type","Tipo de"]) || "";
+        const vintage = pick(w, ["Safra","vintage","ano"]) ?? "";
+        const grape = pick(w, ["Uva","grape","Tipo de uva"]) || "";
+        const region = pick(w, ["Região","Regiao","region"]) || "";
+
+        const stock = toNumSmart(pick(w, ["Estoque","stock"])) ?? 0;
+
+        const sizeRaw = pick(w, ["Tamanho","tamanho","ml","Tipo de"]) || "";
+        const size_ml = parseBottleSizeML(sizeRaw) || parseBottleSizeML(name);
+
+        const base_cost = calcBaseCost(w);
+
+        const discount_max = toNumSmart(pick(w, ["Desconto Máx","Desconto Max","Desconto","desconto","Descon"])) ?? 0;
+        const dun_un = toNumSmart(pick(w, ["DUN Un","DUNUn","DUN","Dun Un","DUN Un."])) ?? null;
+
+        return {
+          id: String(id),
+          name: String(name),
+          brand: String(brand),
+          country: String(country),
+          producer: String(producer),
+          category: String(category),
+          vintage: vintage,
+          grape: String(grape),
+          region: String(region),
+          stock: Number(stock),
+          size_ml,
+          base_cost: Number(base_cost || 0),
+
+          discount_max: Number(discount_max || 0),
+          dun_un: (dun_un==null ? null : Number(dun_un))
+        };
+      });
+
+      data = normalized;
+      dataMap = new Map(data.map(w => [String(w.id), w]));
+    }
+
+    // =========================
+    // FILTERS
+    // =========================
+    function fillSelect(el, values){
+      el.innerHTML = `<option value="">Todos</option>` + values
+        .map(v=> `<option value="${escapeHtml(String(v))}">${escapeHtml(String(v))}</option>`).join("");
+    }
+
+    function buildFilters(){
+      fillSelect(catEl, uniq(data.map(d=>d.category)).sort((a,b)=> String(a).localeCompare(String(b))));
+      fillSelect(countryEl, uniq(data.map(d=>d.country)).sort((a,b)=> String(a).localeCompare(String(b))));
+      fillSelect(grapeEl, uniq(data.map(d=>d.grape)).sort((a,b)=> String(a).localeCompare(String(b))));
+      fillSelect(brandEl, uniq(data.map(d=>d.brand)).sort((a,b)=> String(a).localeCompare(String(b))));
+      fillSelect(producerEl, uniq(data.map(d=>d.producer)).sort((a,b)=> String(a).localeCompare(String(b))));
+
+      const vint = uniq(data.map(d=>d.vintage)).sort((a,b)=> String(a).localeCompare(String(b)));
+      fillSelect(vintageEl, vint);
+
+      const sizes = uniq(data.map(d=> sizeLabelFromML(d.size_ml)).filter(Boolean))
+        .sort((a,b)=> a.localeCompare(b));
+      fillSelect(sizeEl, sizes);
+    }
+
+    const allFilterEls = [fxEl, qEl, catEl, countryEl, grapeEl, vintageEl, sizeEl, brandEl, producerEl, inStockEl, sortEl];
+    allFilterEls.forEach(el=>{
+      el.addEventListener("input", ()=>{ resetLimit(); render(); });
+      el.addEventListener("change", ()=>{ resetLimit(); render(); });
+    });
+
+    byId("btnReset").addEventListener("click", ()=>{
+      fxEl.value = "";
+      qEl.value = "";
+      catEl.value = "";
+      countryEl.value = "";
+      grapeEl.value = "";
+      vintageEl.value = "";
+      sizeEl.value = "";
+      brandEl.value = "";
+      producerEl.value = "";
+      inStockEl.value = "";
+      sortEl.value = "name";
+      resetLimit();
+      render();
+    });
+
+    // =========================
+    // APPLY FILTERS + SORT
+    // =========================
+    function applyFilters(arr){
+      const q = norm(qEl.value);
+      const cat = catEl.value;
+      const country = countryEl.value;
+      const grape = grapeEl.value;
+      const vint = vintageEl.value;
+      const size = sizeEl.value;
+      const brand = brandEl.value;
+      const producer = producerEl.value;
+      const inStock = inStockEl.value;
+
+      return arr.filter(w=>{
+        if(cat && String(w.category) !== String(cat)) return false;
+        if(country && String(w.country) !== String(country)) return false;
+        if(grape && String(w.grape) !== String(grape)) return false;
+        if(vint && String(w.vintage) !== String(vint)) return false;
+        if(brand && String(w.brand) !== String(brand)) return false;
+        if(producer && String(w.producer) !== String(producer)) return false;
+
+        if(size){
+          const label = sizeLabelFromML(w.size_ml);
+          if(label !== size) return false;
+        }
+
+        if(inStock === "1" && !(Number(w.stock||0) > 0)) return false;
+        if(inStock === "0" && !(Number(w.stock||0) <= 0)) return false;
+
+        if(q && !norm(w.name).includes(q)) return false;
+
+        return true;
+      });
+    }
+
+    function sortArr(arr){
+      const s = sortEl.value;
+      const copy = [...arr];
+
+      if(s==="name"){
+        copy.sort((a,b)=> String(a.name).localeCompare(String(b.name)));
+      } else if (s==="usd"){
+        copy.sort((a,b)=> (a.base_cost||0) - (b.base_cost||0));
+      } else if (s==="brl"){
+        copy.sort((a,b)=> (unitCostBRL(a) ?? Number.POSITIVE_INFINITY) - (unitCostBRL(b) ?? Number.POSITIVE_INFINITY));
+      } else if (s==="stock"){
+        copy.sort((a,b)=> (Number(b.stock||0) - Number(a.stock||0)));
+      }
+      return copy;
+    }
+
+    // =========================
+    // RENDER (lazy)
+    // =========================
+    function renderMoreButton(total){
+      const list = byId("list");
+      if(RENDER_LIMIT >= total) return;
+
+      const btn = document.createElement("button");
+      btn.className = "btn";
+      btn.style.marginTop = "8px";
+      const next = Math.min(200, total - RENDER_LIMIT);
+      btn.textContent = `Carregar mais (${next})`;
+      btn.onclick = () => { RENDER_LIMIT += 200; render(); };
+      list.appendChild(btn);
+
+      const hint = document.createElement("div");
+      hint.className = "hint";
+      hint.textContent = "No celular carrega em blocos pra não travar.";
+      list.appendChild(hint);
+    }
+
+    function fmtDiscountMax(w){
+      const d = Number(w.discount_max || 0);
+      if(!d) return "";
+      if(d >= 0 && d <= 100) return `Desc máx ${d}%`;
+      return `Desc máx ${d}`;
+    }
+
+    function fmtStockAndCxs(w){
+      const estoque = Number(w.stock || 0);
+      const cxs = (w.dun_un != null && Number(w.dun_un) > 0) ? Number(w.dun_un) : null;
+      return cxs ? `Estoque ${estoque} | cxs ${cxs}` : `Estoque ${estoque}`;
+    }
+
+    function render(){
+      const filteredAll = sortArr(applyFilters(data));
+      byId("countTag").textContent = `${filteredAll.length} itens`;
+
+      const filtered = filteredAll.slice(0, RENDER_LIMIT);
+
+      byId("list").innerHTML = filtered.map(w=>{
+        const c = unitCostBRL(w);
+
+        const meta = [];
+        if(w.category) meta.push(w.category);
+        if(w.country) meta.push(w.country);
+        if(w.region) meta.push(w.region);
+        if(w.grape) meta.push(w.grape);
+        if(w.vintage) meta.push("Safra " + w.vintage);
+        if(w.size_ml) meta.push("Garrafa " + sizeLabelFromML(w.size_ml));
+        meta.push(fmtStockAndCxs(w));
+
+        const dm = fmtDiscountMax(w);
+        if(dm) meta.push(dm);
+
+        return `
+          <div class="item">
+            <div style="min-width:0;flex:1">
+              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                <span class="tag">${escapeHtml((w.category||"VINHO").toUpperCase())}</span>
+                ${w.size_ml ? `<span class="tag">${escapeHtml(sizeLabelFromML(w.size_ml))}</span>` : ``}
+                ${w.brand ? `<span class="tag">${escapeHtml(w.brand)}</span>` : ``}
+                ${w.producer ? `<span class="tag">${escapeHtml(w.producer)}</span>` : ``}
+              </div>
+
+              <p class="name">${escapeHtml(w.name)}</p>
+
+              <div class="meta">
+                ${meta.map(x=>`<span>• ${escapeHtml(x)}</span>`).join("")}
+              </div>
+
+              <div class="prices">
+                <div class="p"><small>Custo base:</small> ${usd.format(Number(w.base_cost||0))}</div>
+                <div class="p"><small>BRL:</small> ${c==null ? "—" : brl.format(c)}</div>
+              </div>
+            </div>
+
+            <div class="itemRight">
+              <select class="unitPick" data-unitfor="${escapeHtml(w.id)}" aria-label="Tipo de adição">
+                <option value="cx">cx</option>
+                <option value="un">un</option>
+              </select>
+
+              <button class="addBtn" type="button" data-add="${escapeHtml(w.id)}" aria-label="Adicionar ${escapeHtml(w.name)}">
+                ${svgPlus()}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      $$("[data-add]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-add");
+          const wine = dataMap.get(String(id));
+          if(!wine) return;
+
+          const sel = document.querySelector(`select[data-unitfor="${CSS.escape(String(id))}"]`);
+          const kind = sel ? sel.value : "cx";
+
+          addToCart(wine, kind);
+        });
+      });
+
+      renderMoreButton(filteredAll.length);
+      updateCartUI(false);
+    }
+
+    // =========================
+    // CART (cxs + unidades)
+    // =========================
+    const cartOverlay = byId("cartOverlay");
+    const cartList = byId("cartList");
+
+    function showOverlay(el){ el.classList.add("show"); el.setAttribute("aria-hidden","false"); }
+    function hideOverlay(el){ el.classList.remove("show"); el.setAttribute("aria-hidden","true"); }
+
+    function addToCart(wine, kind){
+      const existing = cart.find(x=>String(x.id)===String(wine.id));
+      if(existing){
+        if(kind === "un"){
+          existing.units = clampInt((existing.units || 0) + 1, 0, 9999);
+        } else {
+          existing.boxes = clampInt((existing.boxes || 0) + 1, 0, 999);
+        }
+      }else{
+        cart.push({ id: wine.id, boxes: (kind==="cx" ? 1 : 0), units: (kind==="un" ? 1 : 0) });
+      }
+      updateCartUI(true);
+    }
+
+    function removeFromCart(id){
+      const idx = cart.findIndex(x=>String(x.id)===String(id));
+      if(idx>=0) cart.splice(idx,1);
+      updateCartUI(true);
+    }
+
+    function changeQty(id, field, delta){
+      const line = cart.find(x=>String(x.id)===String(id));
+      if(!line) return;
+
+      if(field === "units"){
+        line.units = clampInt(Number(line.units||0) + delta, 0, 9999);
+      } else {
+        line.boxes = clampInt(Number(line.boxes||0) + delta, 0, 999);
+      }
+      updateCartUI(true);
+    }
+
+    function setQty(id, field, value){
+      const line = cart.find(x=>String(x.id)===String(id));
+      if(!line) return;
+
+      const n = toNumSmart(value);
+      const v = Math.round(n || 0);
+
+      if(field === "units"){
+        line.units = clampInt(v, 0, 9999);
+      } else {
+        line.boxes = clampInt(v, 0, 999);
+      }
+      updateCartUI(true);
+    }
+
+    function cartTotals(){
+      let totalBoxes = 0;
+      let totalUnits = 0;
+      let totalCost = 0;
+
+      const fx = getFx();
+
+      cart.forEach(line=>{
+        const w = dataMap.get(String(line.id));
+        if(!w) return;
+
+        const boxes = Number(line.boxes || 0);
+        const units = Number(line.units || 0);
+
+        totalBoxes += boxes;
+        totalUnits += units;
+
+        const lc = lineCostBRL(w, boxes, units);
+        if(lc!=null) totalCost += lc;
+      });
+
+      return { totalBoxes, totalUnits, totalCost, ok: !!fx };
+    }
+
+    function openCart(){
+      renderCart();
+      showOverlay(cartOverlay);
+    }
+    function closeCart(){ hideOverlay(cartOverlay); }
+
+    byId("btnOpenCart").addEventListener("click", openCart);
+    byId("cartSummary").addEventListener("click", openCart);
+    byId("btnCloseCart").addEventListener("click", closeCart);
+    cartOverlay.addEventListener("click", (e)=>{ if(e.target===cartOverlay) closeCart(); });
+
+    byId("btnReload").addEventListener("click", loadData);
+
+    function renderCart(){
+      const t = cartTotals();
+      byId("warnFx").classList.toggle("show", !t.ok);
+
+      byId("cartBoxes").textContent = String(t.totalBoxes);
+      byId("cartUnits").textContent = String(t.totalUnits);
+      byId("cartCost").textContent = brl.format(t.totalCost || 0);
+
+      byId("pdfMetaLine").textContent = `Última atualização: ${lastUpdateText}`;
+
+      if(cart.length===0){
+        cartList.innerHTML = `
+          <div class="cartLine">
+            <div>
+              <b>Pedido vazio</b>
+              <small>Volte no catálogo, escolha cx/un e toque no “+”.</small>
+            </div>
+            <div class="cartRight"><span class="tag">🍷</span></div>
+          </div>
+        `;
+        return;
+      }
+
+      cartList.innerHTML = cart.map(line=>{
+        const w = dataMap.get(String(line.id));
+        if(!w) return "";
+
+        const perUnit = unitCostBRL(w);
+        const dun = (w.dun_un != null && Number(w.dun_un) > 0) ? Number(w.dun_un) : null;
+        const unitsPerBox = dun || 1;
+
+        const meta = [
+          w.category, w.brand, w.producer, w.country, w.region, w.grape,
+          w.vintage ? ("Safra " + w.vintage) : "",
+          w.size_ml ? ("Garrafa " + sizeLabelFromML(w.size_ml)) : "",
+          fmtStockAndCxs(w),
+          fmtDiscountMax(w)
+        ].filter(Boolean).join(" • ");
+
+        const boxes = Number(line.boxes || 0);
+        const unitsExtra = Number(line.units || 0);
+        const totalUnitsLine = (boxes * unitsPerBox) + unitsExtra;
+
+        const lineCost = lineCostBRL(w, boxes, unitsExtra);
+        const lineCostTxt = lineCost==null ? "—" : brl.format(lineCost);
+
+        return `
+          <div class="cartLine" data-line="${escapeHtml(line.id)}">
+            <div style="flex:1;min-width:0">
+              <b>${escapeHtml(w.name)}</b>
+              <small>${escapeHtml(meta)}</small>
+              <small style="margin-top:6px">
+                Itens por cx: <b>${unitsPerBox}</b> • Total un (linha): <b>${totalUnitsLine}</b>
+              </small>
+            </div>
+
+            <div class="cartRight">
+              <div class="cartPrice">${lineCostTxt}</div>
+
+              <div class="qtyBoxWrap">
+                <span>cxs</span>
+                <input class="qtyBoxInput" inputmode="numeric"
+                  value="${escapeHtml(String(line.boxes ?? 0))}"
+                  data-qty="boxes" data-id="${escapeHtml(line.id)}" />
+              </div>
+
+              <div class="qtyBoxWrap">
+                <span>un</span>
+                <input class="qtyBoxInput" inputmode="numeric"
+                  value="${escapeHtml(String(line.units ?? 0))}"
+                  data-qty="units" data-id="${escapeHtml(line.id)}" />
+              </div>
+
+              <div class="cartMini">
+                <button class="miniIcon" type="button" data-dec="boxes" data-id="${escapeHtml(line.id)}" aria-label="Diminuir cx">−</button>
+                <button class="miniIcon" type="button" data-inc="boxes" data-id="${escapeHtml(line.id)}" aria-label="Aumentar cx">+</button>
+                <button class="miniIcon" type="button" data-dec="units" data-id="${escapeHtml(line.id)}" aria-label="Diminuir un">−</button>
+                <button class="miniIcon" type="button" data-inc="units" data-id="${escapeHtml(line.id)}" aria-label="Aumentar un">+</button>
+                <button class="miniIcon" type="button" data-del="${escapeHtml(line.id)}" aria-label="Remover">🗑️</button>
+              </div>
+
+              <div class="hint">Unit BRL: ${perUnit==null ? "—" : brl.format(perUnit)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      $$("[data-dec]").forEach(b=> b.addEventListener("click", ()=>{
+        const id = b.getAttribute("data-id");
+        const field = b.getAttribute("data-dec");
+        changeQty(id, field, -1);
+      }));
+      $$("[data-inc]").forEach(b=> b.addEventListener("click", ()=>{
+        const id = b.getAttribute("data-id");
+        const field = b.getAttribute("data-inc");
+        changeQty(id, field, +1);
+      }));
+      $$("[data-del]").forEach(b=> b.addEventListener("click", ()=> removeFromCart(b.getAttribute("data-del"))));
+
+      $$("input[data-qty]").forEach(inp=>{
+        const id = inp.getAttribute("data-id");
+        const field = inp.getAttribute("data-qty");
+        inp.addEventListener("change", ()=> setQty(id, field, inp.value));
+        inp.addEventListener("blur", ()=> setQty(id, field, inp.value));
+      });
+    }
+
+    function updateCartUI(rerenderSheet){
+      const t = cartTotals();
+
+      // Mantive o badge como “itens totais” (cxs + un) pra ficar simples no topo
+      byId("cartCount").textContent = String((t.totalBoxes || 0) + (t.totalUnits || 0));
+      byId("cartMiniTotal").textContent = brl.format(t.totalCost || 0);
+
+      if(rerenderSheet && cartOverlay.classList.contains("show")){
+        renderCart();
+      }
+    }
+
+    byId("btnClearCart").addEventListener("click", ()=>{
+      cart.length = 0;
+      updateCartUI(true);
+    });
+
+    // =========================
+    // EXPORT PDF
+    // =========================
+    function nowBR(){
+      const d = new Date();
+      const pad = (n)=> String(n).padStart(2,"0");
+      return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function exportPDF(){
+      const t = cartTotals();
+      if(cart.length === 0){
+        alert("Seu pedido está vazio. Adicione itens primeiro.");
+        return;
+      }
+
+      if(!window.jspdf || !window.jspdf.jsPDF){
+        alert("PDF ainda não carregou. Tenta de novo em 2 segundos.");
+        return;
+      }
+
+      const fx = getFx();
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:"pt", format:"a4" });
+
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const margin = 40;
+
+      let y = margin;
+
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(16);
+      doc.text("Pedido (cxs + un) — Carta de Vinhos", margin, y);
+      y += 18;
+
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(10);
+      doc.text(`Gerado em: ${nowBR()}`, margin, y); y += 14;
+      doc.text(`Última atualização (CSV): ${String(lastUpdateText || "—")}`, margin, y); y += 14;
+      doc.text(`Câmbio: ${fx!=null ? fx : "—"}`, margin, y); y += 18;
+
+      doc.setFont("helvetica","bold");
+      doc.text(`Total cxs: ${t.totalBoxes}   |   Total un: ${t.totalUnits}   |   Total (BRL): ${brl.format(t.totalCost || 0)}`, margin, y);
+      y += 18;
+
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(10);
+
+      const lineGap = 14;
+
+      cart.forEach((line, idx)=>{
+        const w = dataMap.get(String(line.id));
+        if(!w) return;
+
+        const dun = (w.dun_un != null && Number(w.dun_un) > 0) ? Number(w.dun_un) : null;
+        const unitsPerBox = dun || 1;
+
+        const boxes = Number(line.boxes || 0);
+        const unitsExtra = Number(line.units || 0);
+        const unitsTotal = (boxes * unitsPerBox) + unitsExtra;
+
+        const costLine = lineCostBRL(w, boxes, unitsExtra);
+        const costTxt = costLine==null ? "—" : brl.format(costLine);
+
+        const meta = [
+          w.category, w.brand, w.producer, w.country, w.region, w.grape,
+          w.vintage ? ("Safra " + w.vintage) : "",
+          w.size_ml ? ("Garrafa " + sizeLabelFromML(w.size_ml)) : "",
+          `Itens/cx ${unitsPerBox}`
+        ].filter(Boolean).join(" • ");
+
+        const title = `${idx+1}. ${boxes} cx(s) + ${unitsExtra} un — ${w.name} — ${costTxt}`;
+        const metaLine = `   ${meta} • Total un: ${unitsTotal}`;
+
+        if(y > pageH - margin - 40){
+          doc.addPage();
+          y = margin;
+        }
+
+        doc.setFont("helvetica","bold");
+        doc.text(doc.splitTextToSize(title, pageW - margin*2), margin, y);
+        y += lineGap;
+
+        doc.setFont("helvetica","normal");
+        doc.text(doc.splitTextToSize(metaLine, pageW - margin*2), margin, y);
+        y += lineGap + 6;
+      });
+
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      doc.text("Obs: custo estimado em BRL. Caixas usam DUN Un como itens por caixa.", margin, pageH - margin);
+
+      doc.save(`pedido_${new Date().toISOString().slice(0,10)}.pdf`);
+    }
+
+    byId("btnExport").addEventListener("click", exportPDF);
+    byId("btnExport2").addEventListener("click", exportPDF);
+
+    // =========================
+    // INIT
+    // =========================
+    loadData();
+  </script>
+</body>
+</html>
