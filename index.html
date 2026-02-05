@@ -99,12 +99,12 @@
 
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.05fr .95fr;
       gap:12px;
-      align-items:start;
     }
-    @media (max-width: 980px){
+    @media (max-width: 920px){
       .grid{ grid-template-columns: 1fr; }
+      .app{ max-width: 860px; }
     }
 
     .card{
@@ -145,7 +145,7 @@
       grid-template-columns: 1fr 1fr;
       gap:10px;
     }
-    @media (max-width: 640px){
+    @media (max-width: 520px){
       .row2{ grid-template-columns: 1fr; }
     }
     label{
@@ -182,19 +182,14 @@
       gap:10px;
     }
 
-    /* ✅ ITEM (catálogo) refeito pra não “desconfigurar” no PC */
     .item{
       border:1px solid var(--line);
       border-radius: 16px;
       padding:12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
       background:#fff;
-      display:grid;
-      grid-template-columns: 1fr 260px; /* esquerda / direita */
-      gap:12px;
-      align-items:start;
-    }
-    @media (max-width: 720px){
-      .item{ grid-template-columns: 1fr; }
     }
 
     .tag{
@@ -210,23 +205,11 @@
       white-space:nowrap;
     }
 
-    .flag{
-      width:22px; height:22px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      display:grid;
-      place-items:center;
-      background:#fff;
-      font-size:14px;
-      line-height:1;
-    }
-
     .name{
-      margin:8px 0 0;
+      margin:0;
       font-weight:1000;
       font-size:14px;
       letter-spacing:.2px;
-      overflow-wrap:anywhere;
     }
     .meta{
       margin-top:6px;
@@ -237,9 +220,8 @@
       font-size:12px;
       line-height:1.2;
     }
-
     .prices{
-      margin-top:10px;
+      margin-top:8px;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -255,61 +237,37 @@
       font-weight:900;
     }
 
-    /* ✅ área direita (quantidade digitada) */
     .itemRight{
-      border:1px solid var(--line);
-      border-radius: 16px;
-      padding:10px;
-      background:#f9fafb;
+      margin-left:auto;
       display:flex;
       flex-direction:column;
-      gap:10px;
-      align-items:stretch;
-      min-width:0;
-    }
-    .pickRow{
-      display:flex;
       gap:8px;
-      align-items:center;
+      align-items:flex-end;
+      flex:0 0 auto;
+      min-width: 220px;
     }
-    .unitPick{
-      flex:0 0 88px;
-      padding:10px 10px;
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:#111827;
-      font-size:13px;
-      font-weight:900;
+
+    .qtyGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+      width: 220px;
     }
+
+    .miniField label{
+      margin:0 0 6px 0;
+      font-size:11px;
+      letter-spacing:.15px;
+    }
+
     .qtyInput{
-      flex:1 1 auto;
+      width:100%;
       padding:10px 10px;
       border-radius: 14px;
       border:1px solid var(--line);
-      background:#fff;
       font-size:14px;
       text-align:right;
       font-weight:900;
-      min-width:0;
-    }
-    .addBtn{
-      width:100%;
-      border:none;
-      border-radius: 14px;
-      padding:12px 12px;
-      background: var(--accent);
-      color:#052e16;
-      font-weight:1100;
-      cursor:pointer;
-      box-shadow: 0 10px 18px rgba(34,197,94,.25);
-      -webkit-tap-highlight-color: transparent;
-    }
-    .addBtn:active{transform:scale(.99)}
-    .miniNote{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.2;
     }
 
     .bottomBar{
@@ -482,19 +440,6 @@
       color:#16a34a;
       white-space:nowrap;
     }
-    .cartMini{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .miniIcon{
-      width:34px;height:34px;border-radius:999px;border:1px solid var(--line);
-      background:#fff;display:grid;place-items:center;cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .miniIcon:active{transform:scale(.98)}
 
     .qtyBoxWrap{
       display:flex;
@@ -510,7 +455,7 @@
       white-space:nowrap;
     }
     .qtyBoxInput{
-      width:92px;
+      width:110px;
       padding:10px 10px;
       border-radius: 14px;
       border:1px solid var(--line);
@@ -537,7 +482,6 @@
     }
     .totalsRow span{color:var(--muted);font-weight:800}
     .totalsRow strong{font-weight:1100}
-
     .warn{
       padding:10px 12px;
       border-radius:14px;
@@ -586,9 +530,7 @@
                 <div class="hint">Use ponto ou vírgula (ex: 5.12 / 5,12).</div>
               </div>
               <div class="field">
-                <div class="hint" style="margin-top:22px">
-                  Custo em BRL = <b>Preço (USD)</b> × <b>câmbio</b>. (Cx usa <b>DUN Un</b> como itens por caixa.)
-                </div>
+                <div class="hint" style="margin-top:22px">Custo em BRL = <b>Preço (USD)</b> × <b>câmbio</b>. (Cx usa <b>DUN Un</b> como itens por caixa.)</div>
               </div>
             </div>
 
@@ -674,7 +616,7 @@
           <div class="cardHeader">
             <div>
               <h2>Catálogo</h2>
-              <p>Selecione <b>cx</b>/<b>un</b> e digite a quantidade.</p>
+              <p>Digite <b>cxs/un</b> e o pedido atualiza automático.</p>
             </div>
             <div class="tag" id="countTag">0 itens</div>
           </div>
@@ -696,18 +638,19 @@
         <div class="pillCount" id="cartCount">0</div>
       </div>
 
-      <button class="exportBtn" id="btnExport" type="button" title="Exportar PDF">
+      <button class="exportBtn" id="btnExport" type="button" title="Prévia e exportar PDF">
         Exportar PDF
       </button>
     </div>
   </div>
 
+  <!-- Carrinho -->
   <div class="overlay" id="cartOverlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-label="Pedido em caixas e unidades">
       <div class="sheetHeader">
         <div>
           <b>Pedido (cxs + un)</b>
-          <div class="hint">PDF sai em formato de tabela (mais apresentável).</div>
+          <div class="hint">PDF sai com quantidades e custo em BRL.</div>
         </div>
         <button class="closeBtn" id="btnCloseCart" type="button">✕</button>
       </div>
@@ -734,12 +677,46 @@
     </div>
   </div>
 
+  <!-- Prévia PDF -->
+  <div class="overlay" id="pdfOverlay" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Prévia do PDF">
+      <div class="sheetHeader">
+        <div>
+          <b>Prévia do PDF</b>
+          <div class="hint">Confira os totais e os itens antes de gerar.</div>
+        </div>
+        <button class="closeBtn" id="btnClosePdfPreview" type="button">✕</button>
+      </div>
+
+      <div class="sheetBody">
+        <div class="warn" id="warnPdfFx">Preencha o câmbio (USD→BRL) pra gerar o PDF.</div>
+
+        <div class="totals">
+          <div class="totalsRow"><span>Total cxs</span> <strong id="pvBoxes">0</strong></div>
+          <div class="totalsRow"><span>Total un</span> <strong id="pvUnits">0</strong></div>
+          <div class="totalsRow"><span>Total (BRL)</span> <strong id="pvTotal">R$ 0,00</strong></div>
+        </div>
+
+        <div class="hint" id="pvMeta">Última atualização: —</div>
+
+        <div class="label" style="margin-top:6px">Itens (resumo)</div>
+        <div id="pvList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+      <div class="sheetFooter">
+        <button class="btn" id="btnCancelPdf" type="button">Cancelar</button>
+        <button class="btn primary" id="btnConfirmPdf" type="button">Gerar PDF</button>
+      </div>
+    </div>
+  </div>
+
   <!-- CSV parser -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <!-- PDF -->
+
+  <!-- PDF core -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <!-- ✅ TABELA BONITA NO PDF -->
-  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.29/dist/jspdf.plugin.autotable.min.js"></script>
+  <!-- autoTable plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.3/dist/jspdf.plugin.autotable.min.js"></script>
 
   <script>
     // =========================
@@ -766,7 +743,7 @@
       if (lastComma !== -1 && lastDot !== -1){
         const decimalIsComma = lastComma > lastDot;
         if (decimalIsComma){
-          s = s.replace(/\./g,"").replace(",",".");
+          s = s.replace(/\./g,"").replace(",","." );
         } else {
           s = s.replace(/,/g,"");
         }
@@ -775,7 +752,7 @@
         if (parts[1] && parts[1].length === 3){
           s = parts[0] + parts[1];
         } else {
-          s = s.replace(",",".");
+          s = s.replace(",","." );
         }
       } else if (lastDot !== -1){
         const parts = s.split(".");
@@ -815,94 +792,34 @@
     }
 
     // =========================
-    // ✅ ÚLTIMA ATUALIZAÇÃO (updated em formato americano)
+    // BANDEIRA DO PAÍS
     // =========================
-    function parseUSDateTimeToDate(v){
-      if(v == null) return null;
-      const s0 = String(v).trim();
-      if(!s0) return null;
-
-      // tenta ISO direto
-      const isoTry = new Date(s0.replace(" ", "T"));
-      if(!Number.isNaN(isoTry.getTime())) return isoTry;
-
-      // mm/dd/yyyy hh:mm(:ss)? (AM/PM)?
-      const m = s0.match(
-        /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?$/i
-      );
-      if(!m) return null;
-
-      let mm = Number(m[1]);
-      let dd = Number(m[2]);
-      let yy = Number(m[3]);
-      if(yy < 100) yy += 2000;
-
-      let hh = m[4] != null ? Number(m[4]) : 0;
-      const mi = m[5] != null ? Number(m[5]) : 0;
-      const ss = m[6] != null ? Number(m[6]) : 0;
-      const ampm = (m[7] || "").toUpperCase();
-
-      if(ampm === "PM" && hh < 12) hh += 12;
-      if(ampm === "AM" && hh === 12) hh = 0;
-
-      const d = new Date(yy, mm - 1, dd, hh, mi, ss);
-      if(Number.isNaN(d.getTime())) return null;
-      return d;
-    }
-
-    function formatBRDateTime(d){
-      const pad = (n)=> String(n).padStart(2,"0");
-      return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    }
-
-    function normalizeUpdatedDisplay(raw){
-      const d = parseUSDateTimeToDate(raw);
-      if(!d) return String(raw || "—").trim() || "—";
-      return formatBRDateTime(d);
-    }
-
-    // =========================
-    // ✅ BANDEIRAS (country → emoji)
-    // =========================
-    const COUNTRY_TO_ISO2 = {
-      "brasil":"BR", "brazil":"BR",
-      "portugal":"PT",
-      "espanha":"ES", "spain":"ES",
-      "franca":"FR", "frança":"FR", "france":"FR",
-      "italia":"IT", "itália":"IT", "italy":"IT",
-      "alemanha":"DE", "germany":"DE",
-      "austria":"AT", "áustria":"AT", "austria ":"AT",
-      "argentina":"AR",
-      "chile":"CL",
-      "uruguai":"UY", "uruguay":"UY",
-      "estados unidos":"US", "eua":"US", "usa":"US", "united states":"US",
-      "africa do sul":"ZA", "áfrica do sul":"ZA", "south africa":"ZA",
-      "australia":"AU", "austrália":"AU",
-      "nova zelandia":"NZ", "nova zelândia":"NZ", "new zealand":"NZ",
-      "inglaterra":"GB", "reino unido":"GB", "united kingdom":"GB", "uk":"GB",
-      "escocia":"GB", "scotland":"GB",
-      "china":"CN",
-      "japao":"JP", "japão":"JP", "japan":"JP",
-      "grecia":"GR", "grécia":"GR", "greece":"GR",
-      "israel":"IL",
-      "libano":"LB", "líbano":"LB",
-      "mexico":"MX", "méxico":"MX"
+    const COUNTRY_FLAGS = {
+      "brasil":"🇧🇷","brazil":"🇧🇷",
+      "franca":"🇫🇷","france":"🇫🇷",
+      "italia":"🇮🇹","italy":"🇮🇹",
+      "espanha":"🇪🇸","spain":"🇪🇸",
+      "portugal":"🇵🇹",
+      "argentina":"🇦🇷",
+      "chile":"🇨🇱",
+      "uruguai":"🇺🇾","uruguay":"🇺🇾",
+      "estados unidos":"🇺🇸","usa":"🇺🇸","united states":"🇺🇸","eua":"🇺🇸",
+      "australia":"🇦🇺",
+      "nova zelandia":"🇳🇿","new zealand":"🇳🇿",
+      "alemanha":"🇩🇪","germany":"🇩🇪",
+      "austria":"🇦🇹",
+      "suica":"🇨🇭","switzerland":"🇨🇭",
+      "africa do sul":"🇿🇦","south africa":"🇿🇦",
+      "grecia":"🇬🇷","greece":"🇬🇷",
+      "libano":"🇱🇧","lebanon":"🇱🇧",
+      "israel":"🇮🇱",
+      "hungria":"🇭🇺","hungary":"🇭🇺"
     };
 
-    function iso2ToFlagEmoji(iso2){
-      if(!iso2 || iso2.length !== 2) return "🏳️";
-      const codePoints = [...iso2.toUpperCase()].map(c => 127397 + c.charCodeAt(0));
-      return String.fromCodePoint(...codePoints);
-    }
-
     function flagForCountry(country){
-      const key = norm(country).trim();
-      const iso2 = COUNTRY_TO_ISO2[key];
-      if(iso2) return iso2ToFlagEmoji(iso2);
-      // fallback: se já veio "BR" etc
-      const raw = String(country||"").trim().toUpperCase();
-      if(/^[A-Z]{2}$/.test(raw)) return iso2ToFlagEmoji(raw);
-      return "🏳️";
+      const c = norm(country).trim();
+      if(!c) return "🏳️";
+      return COUNTRY_FLAGS[c] || "🏳️";
     }
 
     // =========================
@@ -945,6 +862,33 @@
     }
 
     // =========================
+    // UPDATED (formato americano -> exibir pt-BR)
+    // =========================
+    function parseUpdatedToPtBR(raw){
+      const s = String(raw || "").trim();
+      if(!s) return "—";
+
+      const d0 = new Date(s);
+      if(!isNaN(d0.getTime())){
+        return d0.toLocaleString("pt-BR");
+      }
+
+      const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+      if(m){
+        const mm = Number(m[1]);
+        const dd = Number(m[2]);
+        const yy = Number(m[3].length===2 ? ("20"+m[3]) : m[3]);
+        const hh = Number(m[4] || 0);
+        const mi = Number(m[5] || 0);
+        const ss = Number(m[6] || 0);
+        const d = new Date(yy, mm-1, dd, hh, mi, ss);
+        if(!isNaN(d.getTime())) return d.toLocaleString("pt-BR");
+      }
+
+      return s;
+    }
+
+    // =========================
     // STATE + PERF
     // =========================
     let data = [];
@@ -954,7 +898,6 @@
     let RENDER_LIMIT = 80;
     function resetLimit(){ RENDER_LIMIT = 80; }
 
-    // Cart: aceita CAIXAS e UNIDADES
     const cart = []; // { id, boxes, units }
 
     // =========================
@@ -997,7 +940,7 @@
     }
 
     // =========================
-    // LOAD CSV + Última atualização
+    // LOAD CSV + Última atualização (coluna updated)
     // =========================
     async function loadData(){
       try{
@@ -1013,23 +956,16 @@
         const rows = parsed.data || [];
         const fields = (parsed.meta && parsed.meta.fields) ? parsed.meta.fields : [];
 
-        // ✅ PRIORIDADE TOTAL: coluna UPDATED (hora do download)
         if(fields.length && rows.length){
-          const updatedField =
-            fields.find(f => norm(f) === "updated") ||
-            fields.find(f => norm(f) === "up dated") ||
-            fields.find(f => norm(f).includes("updated"));
-
-          let raw = null;
-
-          if(updatedField){
-            raw = rows[0]?.[updatedField];
+          const want = fields.find(f => norm(f) === "updated" || norm(f) === "up dated");
+          if(want){
+            const v = rows[0] ? rows[0][want] : null;
+            lastUpdateText = parseUpdatedToPtBR(v);
           } else {
             const lastField = fields[fields.length - 1];
-            raw = rows[0]?.[lastField];
+            const v = rows[0] ? rows[0][lastField] : null;
+            lastUpdateText = parseUpdatedToPtBR(v);
           }
-
-          lastUpdateText = normalizeUpdatedDisplay(raw);
         } else {
           lastUpdateText = "—";
         }
@@ -1047,7 +983,7 @@
       }catch(err){
         console.error(err);
         byId("list").innerHTML = `
-          <div class="item" style="border-color:#fecaca;background:#fff1f2; grid-template-columns: 1fr;">
+          <div class="item" style="border-color:#fecaca;background:#fff1f2">
             <div style="flex:1">
               <p class="name" style="color:#7f1d1d">Erro carregando wines_catalog.csv</p>
               <div class="meta">
@@ -1100,7 +1036,6 @@
           stock: Number(stock),
           size_ml,
           base_cost: Number(base_cost || 0),
-
           discount_max: Number(discount_max || 0),
           dun_un: (dun_un==null ? null : Number(dun_un))
         };
@@ -1120,10 +1055,18 @@
 
     function buildFilters(){
       fillSelect(catEl, uniq(data.map(d=>d.category)).sort((a,b)=> String(a).localeCompare(String(b))));
-      fillSelect(countryEl, uniq(data.map(d=>d.country)).sort((a,b)=> String(a).localeCompare(String(b))));
       fillSelect(grapeEl, uniq(data.map(d=>d.grape)).sort((a,b)=> String(a).localeCompare(String(b))));
       fillSelect(brandEl, uniq(data.map(d=>d.brand)).sort((a,b)=> String(a).localeCompare(String(b))));
       fillSelect(producerEl, uniq(data.map(d=>d.producer)).sort((a,b)=> String(a).localeCompare(String(b))));
+
+      // ✅ FIX 1: bandeira no texto, VALUE só o país (pra filtro e PDF não "desconfigurar")
+      const countries = uniq(data.map(d=>d.country)).sort((a,b)=> String(a).localeCompare(String(b)));
+      countryEl.innerHTML =
+        `<option value="">Todos</option>` +
+        countries.map(c=>{
+          const flag = flagForCountry(c);
+          return `<option value="${escapeHtml(String(c))}">${escapeHtml(flag)} ${escapeHtml(String(c))}</option>`;
+        }).join("");
 
       const vint = uniq(data.map(d=>d.vintage)).sort((a,b)=> String(a).localeCompare(String(b)));
       fillSelect(vintageEl, vint);
@@ -1241,17 +1184,25 @@
       return cxs ? `Estoque ${estoque} | cxs ${cxs}` : `Estoque ${estoque}`;
     }
 
-    // ✅ input de qty: ao clicar, limpa o zero. Se sair vazio, volta pra 0.
-    function wireQtyInputBehavior(inp){
-      inp.addEventListener("focus", ()=>{
-        const v = String(inp.value ?? "").trim();
-        if(v === "0") inp.value = "";
-        inp.select?.();
-      });
-      inp.addEventListener("blur", ()=>{
-        const v = String(inp.value ?? "").trim();
-        if(v === "") inp.value = "0";
-      });
+    function getCartLine(id){
+      let line = cart.find(x=>String(x.id)===String(id));
+      if(!line){
+        line = { id: String(id), boxes: 0, units: 0 };
+        cart.push(line);
+      }
+      return line;
+    }
+
+    function setLineQty(id, boxes, units){
+      const line = getCartLine(id);
+      line.boxes = clampInt(Math.round(boxes||0), 0, 999);
+      line.units = clampInt(Math.round(units||0), 0, 9999);
+
+      if((line.boxes||0)===0 && (line.units||0)===0){
+        const idx = cart.findIndex(x=>String(x.id)===String(id));
+        if(idx>=0) cart.splice(idx,1);
+      }
+      updateCartUI(true);
     }
 
     function render(){
@@ -1264,7 +1215,7 @@
         const c = unitCostBRL(w);
 
         const meta = [];
-        if(w.country) meta.push(w.country);
+        if(w.country) meta.push(`${flagForCountry(w.country)} ${w.country}`);
         if(w.region) meta.push(w.region);
         if(w.grape) meta.push(w.grape);
         if(w.vintage) meta.push("Safra " + w.vintage);
@@ -1274,14 +1225,15 @@
         const dm = fmtDiscountMax(w);
         if(dm) meta.push(dm);
 
-        const flag = flagForCountry(w.country);
+        const line = cart.find(x=>String(x.id)===String(w.id));
+        const b0 = line ? (line.boxes||0) : 0;
+        const u0 = line ? (line.units||0) : 0;
 
         return `
           <div class="item">
-            <div style="min-width:0;">
+            <div style="min-width:0;flex:1">
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
                 <span class="tag">${escapeHtml((w.category||"VINHO").toUpperCase())}</span>
-                <span class="flag" title="${escapeHtml(w.country||"")}">${escapeHtml(flag)}</span>
                 ${w.size_ml ? `<span class="tag">${escapeHtml(sizeLabelFromML(w.size_ml))}</span>` : ``}
                 ${w.brand ? `<span class="tag">${escapeHtml(w.brand)}</span>` : ``}
                 ${w.producer ? `<span class="tag">${escapeHtml(w.producer)}</span>` : ``}
@@ -1300,67 +1252,51 @@
             </div>
 
             <div class="itemRight">
-              <div class="pickRow">
-                <select class="unitPick" data-unitfor="${escapeHtml(w.id)}" aria-label="Tipo (cx/un)">
-                  <option value="cx">cx</option>
-                  <option value="un">un</option>
-                </select>
-
-                <input class="qtyInput"
-                  inputmode="numeric"
-                  value="0"
-                  data-qtyfor="${escapeHtml(w.id)}"
-                  aria-label="Quantidade" />
+              <div class="qtyGrid">
+                <div class="miniField">
+                  <label>cxs</label>
+                  <input class="qtyInput" inputmode="numeric" value="${escapeHtml(String(b0))}"
+                    data-qtyline="boxes" data-id="${escapeHtml(w.id)}" />
+                </div>
+                <div class="miniField">
+                  <label>un</label>
+                  <input class="qtyInput" inputmode="numeric" value="${escapeHtml(String(u0))}"
+                    data-qtyline="units" data-id="${escapeHtml(w.id)}" />
+                </div>
               </div>
-
-              <button class="addBtn" type="button" data-add="${escapeHtml(w.id)}" aria-label="Adicionar ${escapeHtml(w.name)}">
-                Adicionar
-              </button>
-
-              <div class="miniNote">Dica: clique na quantidade pra digitar (o 0 some).</div>
+              <div class="hint">Dica: ao digitar, já entra no pedido.</div>
             </div>
           </div>
         `;
       }).join("");
 
-      // wire qty focus/blur
-      $$("input[data-qtyfor]").forEach(wireQtyInputBehavior);
-
-      // add click: pega qty e soma no carrinho
-      $$("[data-add]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          const id = btn.getAttribute("data-add");
-          const wine = dataMap.get(String(id));
-          if(!wine) return;
-
-          const sel = document.querySelector(`select[data-unitfor="${CSS.escape(String(id))}"]`);
-          const kind = sel ? sel.value : "cx";
-
-          const qtyInp = document.querySelector(`input[data-qtyfor="${CSS.escape(String(id))}"]`);
-          const qty = clampInt(Math.round(toNumSmart(qtyInp?.value) || 0), 0, 9999);
-
-          if(qty <= 0){
-            alert("Digite uma quantidade maior que 0.");
-            qtyInp?.focus();
-            return;
-          }
-
-          addToCartQty(wine, kind, qty);
-
-          // volta o input pra 0 (pra não acumular sem querer)
-          if(qtyInp) qtyInp.value = "0";
+      $$("input[data-qtyline]").forEach(inp=>{
+        inp.addEventListener("focus", ()=>{
+          if(String(inp.value).trim()==="0") inp.value="";
+          inp.select?.();
         });
-      });
 
-      // enter no input também adiciona
-      $$("input[data-qtyfor]").forEach(inp=>{
+        const commit = ()=>{
+          const id = inp.getAttribute("data-id");
+          const field = inp.getAttribute("data-qtyline");
+          const n = toNumSmart(inp.value);
+          const v = Math.round(n || 0);
+
+          const line = cart.find(x=>String(x.id)===String(id));
+          const curBoxes = line ? Number(line.boxes||0) : 0;
+          const curUnits = line ? Number(line.units||0) : 0;
+
+          const nextBoxes = (field==="boxes") ? v : curBoxes;
+          const nextUnits = (field==="units") ? v : curUnits;
+
+          setLineQty(id, nextBoxes, nextUnits);
+          render();
+        };
+
+        inp.addEventListener("change", commit);
+        inp.addEventListener("blur", commit);
         inp.addEventListener("keydown", (e)=>{
-          if(e.key === "Enter"){
-            e.preventDefault();
-            const id = inp.getAttribute("data-qtyfor");
-            const btn = document.querySelector(`button[data-add="${CSS.escape(String(id))}"]`);
-            btn?.click();
-          }
+          if(e.key==="Enter"){ e.preventDefault(); inp.blur(); }
         });
       });
 
@@ -1369,7 +1305,7 @@
     }
 
     // =========================
-    // CART (cxs + unidades)
+    // CART
     // =========================
     const cartOverlay = byId("cartOverlay");
     const cartList = byId("cartList");
@@ -1377,36 +1313,11 @@
     function showOverlay(el){ el.classList.add("show"); el.setAttribute("aria-hidden","false"); }
     function hideOverlay(el){ el.classList.remove("show"); el.setAttribute("aria-hidden","true"); }
 
-    function addToCartQty(wine, kind, qty){
-      const existing = cart.find(x=>String(x.id)===String(wine.id));
-      if(existing){
-        if(kind === "un"){
-          existing.units = clampInt((existing.units || 0) + qty, 0, 9999);
-        } else {
-          existing.boxes = clampInt((existing.boxes || 0) + qty, 0, 999);
-        }
-      }else{
-        cart.push({ id: wine.id, boxes: (kind==="cx" ? qty : 0), units: (kind==="un" ? qty : 0) });
-      }
-      updateCartUI(true);
-    }
-
     function removeFromCart(id){
       const idx = cart.findIndex(x=>String(x.id)===String(id));
       if(idx>=0) cart.splice(idx,1);
       updateCartUI(true);
-    }
-
-    function changeQty(id, field, delta){
-      const line = cart.find(x=>String(x.id)===String(id));
-      if(!line) return;
-
-      if(field === "units"){
-        line.units = clampInt(Number(line.units||0) + delta, 0, 9999);
-      } else {
-        line.boxes = clampInt(Number(line.boxes||0) + delta, 0, 999);
-      }
-      updateCartUI(true);
+      render();
     }
 
     function setQty(id, field, value){
@@ -1421,7 +1332,14 @@
       } else {
         line.boxes = clampInt(v, 0, 999);
       }
+
+      if((line.boxes||0)===0 && (line.units||0)===0){
+        removeFromCart(id);
+        return;
+      }
+
       updateCartUI(true);
+      render();
     }
 
     function cartTotals(){
@@ -1476,7 +1394,7 @@
           <div class="cartLine">
             <div>
               <b>Pedido vazio</b>
-              <small>Volte no catálogo, selecione cx/un, digite a quantidade e clique em “Adicionar”.</small>
+              <small>Digite cxs/un no catálogo pra montar.</small>
             </div>
             <div class="cartRight"><span class="tag">🍷</span></div>
           </div>
@@ -1493,12 +1411,9 @@
         const unitsPerBox = dun || 1;
 
         const meta = [
-          w.category,
-          w.brand,
-          w.producer,
-          w.country ? `${flagForCountry(w.country)} ${w.country}` : "",
-          w.region,
-          w.grape,
+          w.category, w.brand, w.producer,
+          (w.country ? (w.country) : ""),
+          w.region, w.grape,
           w.vintage ? ("Safra " + w.vintage) : "",
           w.size_ml ? ("Garrafa " + sizeLabelFromML(w.size_ml)) : "",
           fmtStockAndCxs(w),
@@ -1539,12 +1454,8 @@
                   data-qty="units" data-id="${escapeHtml(line.id)}" />
               </div>
 
-              <div class="cartMini">
-                <button class="miniIcon" type="button" data-dec="boxes" data-id="${escapeHtml(line.id)}" aria-label="Diminuir cx">−</button>
-                <button class="miniIcon" type="button" data-inc="boxes" data-id="${escapeHtml(line.id)}" aria-label="Aumentar cx">+</button>
-                <button class="miniIcon" type="button" data-dec="units" data-id="${escapeHtml(line.id)}" aria-label="Diminuir un">−</button>
-                <button class="miniIcon" type="button" data-inc="units" data-id="${escapeHtml(line.id)}" aria-label="Aumentar un">+</button>
-                <button class="miniIcon" type="button" data-del="${escapeHtml(line.id)}" aria-label="Remover">🗑️</button>
+              <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap">
+                <button class="btn" style="flex:0 0 auto; padding:10px 12px" type="button" data-del="${escapeHtml(line.id)}">Remover</button>
               </div>
 
               <div class="hint">Unit BRL: ${perUnit==null ? "—" : brl.format(perUnit)}</div>
@@ -1553,23 +1464,20 @@
         `;
       }).join("");
 
-      $$("[data-dec]").forEach(b=> b.addEventListener("click", ()=>{
-        const id = b.getAttribute("data-id");
-        const field = b.getAttribute("data-dec");
-        changeQty(id, field, -1);
-      }));
-      $$("[data-inc]").forEach(b=> b.addEventListener("click", ()=>{
-        const id = b.getAttribute("data-id");
-        const field = b.getAttribute("data-inc");
-        changeQty(id, field, +1);
-      }));
       $$("[data-del]").forEach(b=> b.addEventListener("click", ()=> removeFromCart(b.getAttribute("data-del"))));
 
       $$("input[data-qty]").forEach(inp=>{
+        inp.addEventListener("focus", ()=>{
+          if(String(inp.value).trim()==="0") inp.value="";
+          inp.select?.();
+        });
         const id = inp.getAttribute("data-id");
         const field = inp.getAttribute("data-qty");
         inp.addEventListener("change", ()=> setQty(id, field, inp.value));
         inp.addEventListener("blur", ()=> setQty(id, field, inp.value));
+        inp.addEventListener("keydown", (e)=>{
+          if(e.key==="Enter"){ e.preventDefault(); inp.blur(); }
+        });
       });
     }
 
@@ -1586,10 +1494,84 @@
     byId("btnClearCart").addEventListener("click", ()=>{
       cart.length = 0;
       updateCartUI(true);
+      render();
     });
 
     // =========================
-    // EXPORT PDF (TABELA BONITA)
+    // PDF PREVIEW
+    // =========================
+    const pdfOverlay = byId("pdfOverlay");
+    const pvList = byId("pvList");
+
+    function openPdfPreview(){
+      const t = cartTotals();
+      byId("warnPdfFx").classList.toggle("show", !t.ok);
+
+      byId("pvBoxes").textContent = String(t.totalBoxes);
+      byId("pvUnits").textContent = String(t.totalUnits);
+      byId("pvTotal").textContent = brl.format(t.totalCost || 0);
+      byId("pvMeta").textContent = `Última atualização: ${lastUpdateText}`;
+
+      if(cart.length === 0){
+        pvList.innerHTML = `
+          <div class="cartLine">
+            <div>
+              <b>Pedido vazio</b>
+              <small>Adicione itens antes de exportar.</small>
+            </div>
+            <div class="cartRight"><span class="tag">🍷</span></div>
+          </div>
+        `;
+      } else {
+        pvList.innerHTML = cart.slice(0, 20).map((line, idx)=>{
+          const w = dataMap.get(String(line.id));
+          if(!w) return "";
+
+          const dun = (w.dun_un != null && Number(w.dun_un) > 0) ? Number(w.dun_un) : null;
+          const unitsPerBox = dun || 1;
+
+          const boxes = Number(line.boxes || 0);
+          const unitsExtra = Number(line.units || 0);
+          const unitsTotal = (boxes * unitsPerBox) + unitsExtra;
+
+          const lineCost = lineCostBRL(w, boxes, unitsExtra);
+          const lineCostTxt = lineCost==null ? "—" : brl.format(lineCost);
+
+          return `
+            <div class="cartLine">
+              <div style="flex:1;min-width:0">
+                <b>${escapeHtml(String(idx+1) + ". " + w.name)}</b>
+                <small>${escapeHtml((w.country||"") + (w.vintage?(" • Safra " + w.vintage):"") + (w.size_ml?(" • " + sizeLabelFromML(w.size_ml)):""))}</small>
+                <small style="margin-top:6px">cxs: <b>${boxes}</b> • un: <b>${unitsExtra}</b> • total un: <b>${unitsTotal}</b></small>
+              </div>
+              <div class="cartRight">
+                <div class="cartPrice">${lineCostTxt}</div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        if(cart.length > 20){
+          pvList.innerHTML += `<div class="hint">Mostrando 20 itens. O PDF vai com tudo.</div>`;
+        }
+      }
+
+      showOverlay(pdfOverlay);
+    }
+
+    function closePdfPreview(){ hideOverlay(pdfOverlay); }
+
+    byId("btnClosePdfPreview").addEventListener("click", closePdfPreview);
+    byId("btnCancelPdf").addEventListener("click", closePdfPreview);
+    pdfOverlay.addEventListener("click", (e)=>{ if(e.target===pdfOverlay) closePdfPreview(); });
+
+    byId("btnConfirmPdf").addEventListener("click", ()=>{
+      closePdfPreview();
+      exportPDF();
+    });
+
+    // =========================
+    // EXPORT PDF (tabela)
     // =========================
     function nowBR(){
       const d = new Date();
@@ -1605,31 +1587,37 @@
       }
 
       if(!window.jspdf || !window.jspdf.jsPDF){
-        alert("PDF ainda não carregou. Tenta de novo.");
+        alert("PDF ainda não carregou. Tenta de novo em 2 segundos.");
+        return;
+      }
+
+      const hasAutoTable = !!(window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable);
+      if(!hasAutoTable){
+        alert("autoTable não carregou. Confere o script do jspdf-autotable.");
         return;
       }
 
       const fx = getFx();
-
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit:"pt", format:"a4" });
 
-      // Cabeçalho
+      const margin = 40;
+      const pageH = doc.internal.pageSize.getHeight();
+
+      // Cabeçalho (primeira página)
       doc.setFont("helvetica","bold");
       doc.setFontSize(14);
-      doc.text("Pedido (cxs + un) — Carta de Vinhos", 40, 44);
+      doc.text("Pedido (cxs + un) — Carta de Vinhos", margin, 46);
 
       doc.setFont("helvetica","normal");
-      doc.setFontSize(9);
-      doc.text(`Gerado em: ${nowBR()}`, 40, 60);
-      doc.text(`Última atualização (CSV): ${String(lastUpdateText || "—")}`, 40, 72);
-      doc.text(`Câmbio: ${fx!=null ? fx : "—"}`, 40, 84);
+      doc.setFontSize(10);
+      doc.text(`Gerado em: ${nowBR()}`, margin, 66);
+      doc.text(`Última atualização (CSV): ${String(lastUpdateText || "—")}`, margin, 80);
+      doc.text(`Câmbio: ${fx!=null ? fx : "—"}`, margin, 94);
 
       doc.setFont("helvetica","bold");
-      doc.setFontSize(10);
-      doc.text(`Total cxs: ${t.totalBoxes}   |   Total un: ${t.totalUnits}   |   Total (BRL): ${brl.format(t.totalCost || 0)}`, 40, 102);
+      doc.text(`Total cxs: ${t.totalBoxes}   |   Total un: ${t.totalUnits}   |   Total (BRL): ${brl.format(t.totalCost || 0)}`, margin, 114);
 
-      // Monta linhas da tabela
       const rows = cart.map((line, idx)=>{
         const w = dataMap.get(String(line.id));
         if(!w) return null;
@@ -1641,36 +1629,33 @@
         const unitsExtra = Number(line.units || 0);
         const unitsTotal = (boxes * unitsPerBox) + unitsExtra;
 
-        const unitBRL = unitCostBRL(w);
-        const lineBRL = lineCostBRL(w, boxes, unitsExtra);
+        const perUnit = unitCostBRL(w);
+        const lineCost = lineCostBRL(w, boxes, unitsExtra);
+
+        // ✅ FIX 2: país só texto (sem bandeira, sem bagunçar)
+        const countryTxt = (w.country ? String(w.country).trim() : "");
 
         return [
           String(idx+1),
-          w.name,
-          w.country ? `${flagForCountry(w.country)} ${w.country}` : "",
-          w.vintage ? String(w.vintage) : "",
-          w.size_ml ? sizeLabelFromML(w.size_ml) : "",
+          String(w.name || ""),
+          countryTxt,
+          (w.vintage ? String(w.vintage) : ""),
+          (w.size_ml ? sizeLabelFromML(w.size_ml) : ""),
           String(boxes),
           String(unitsExtra),
           String(unitsPerBox),
           String(unitsTotal),
-          unitBRL==null ? "—" : brl.format(unitBRL),
-          lineBRL==null ? "—" : brl.format(lineBRL)
+          (perUnit==null ? "—" : brl.format(perUnit)),
+          (lineCost==null ? "—" : brl.format(lineCost))
         ];
       }).filter(Boolean);
 
-      // Tabela
-      if(typeof doc.autoTable !== "function"){
-        alert("AutoTable não carregou. Confere o script do jspdf-autotable.");
-        return;
-      }
-
+      // ✅ FIX 3: não cortar final / rodapé seguro / “centralizar” via margens simétricas + bottom maior
       doc.autoTable({
-        startY: 120,
-        head: [[
-          "#","Vinho","País","Safra","Garrafa","cxs","un","un/cx","total un","Unit (BRL)","Total (BRL)"
-        ]],
+        startY: 130,
+        head: [[ "#","Vinho","País","Safra","Garrafa","cxs","un","un/cx","total un","Unit (BRL)","Total (BRL)" ]],
         body: rows,
+
         styles: {
           font: "helvetica",
           fontSize: 8,
@@ -1678,36 +1663,59 @@
           overflow: "linebreak",
           valign: "top"
         },
-        headStyles: {
-          fontStyle: "bold"
-        },
-        columnStyles: {
-          0: { cellWidth: 18 },   // #
-          1: { cellWidth: 190 },  // vinho
-          2: { cellWidth: 70 },   // país
-          3: { cellWidth: 38 },   // safra
-          4: { cellWidth: 45 },   // garrafa
-          5: { cellWidth: 28 },   // cxs
-          6: { cellWidth: 28 },   // un
-          7: { cellWidth: 34 },   // un/cx
-          8: { cellWidth: 40 },   // total un
-          9: { cellWidth: 62 },   // unit
-          10:{ cellWidth: 64 }    // total
-        },
-        margin: { left: 40, right: 40 }
-      });
+        headStyles: { fontStyle: "bold" },
 
-      // Rodapé
-      const pageH = doc.internal.pageSize.getHeight();
-      doc.setFont("helvetica","normal");
-      doc.setFontSize(8);
-      doc.text("Obs: custo estimado em BRL. Caixas usam DUN Un como itens por caixa.", 40, pageH - 30);
+        pageBreak: "auto",
+        rowPageBreak: "auto",
+
+        margin: { top: 40, bottom: 70, left: 40, right: 40 },
+
+        columnStyles: {
+          0: { cellWidth: 18 },
+          1: { cellWidth: 182 },   // vinho
+          2: { cellWidth: 86 },    // país (mais largo pra não quebrar feio)
+          3: { cellWidth: 38 },
+          4: { cellWidth: 45 },
+          5: { cellWidth: 28, halign: "right" },
+          6: { cellWidth: 28, halign: "right" },
+          7: { cellWidth: 34, halign: "right" },
+          8: { cellWidth: 40, halign: "right" },
+          9: { cellWidth: 62, halign: "right" },
+          10:{ cellWidth: 64, halign: "right" }
+        },
+
+        didDrawPage: (data) => {
+          const pageW = doc.internal.pageSize.getWidth();
+          const footY = pageH - 26;
+
+          doc.setFont("helvetica","normal");
+          doc.setFontSize(9);
+
+          // centralizado
+          doc.text(
+            "Obs: custo estimado em BRL. Caixas usam DUN Un como itens por caixa.",
+            pageW / 2,
+            footY,
+            { align: "center" }
+          );
+
+          // paginação (direita)
+          const pageNumber = doc.internal.getNumberOfPages();
+          doc.text(
+            `Página ${pageNumber}`,
+            pageW - 40,
+            footY,
+            { align: "right" }
+          );
+        }
+      });
 
       doc.save(`pedido_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
-    byId("btnExport").addEventListener("click", exportPDF);
-    byId("btnExport2").addEventListener("click", exportPDF);
+    // botões export: abre prévia
+    byId("btnExport").addEventListener("click", openPdfPreview);
+    byId("btnExport2").addEventListener("click", openPdfPreview);
 
     // =========================
     // INIT
