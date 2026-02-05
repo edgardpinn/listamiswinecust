@@ -238,10 +238,12 @@
       margin-left:auto;
       display:flex;
       flex-direction:column;
-      gap:8px;
+      gap:10px;
       align-items:flex-end;
       flex:0 0 auto;
+      min-width: 210px;
     }
+
     .unitPick{
       width:auto;
       min-width:86px;
@@ -253,21 +255,65 @@
       font-size:13px;
       font-weight:900;
     }
-    .addBtn{
-      width:44px;
-      height:44px;
-      border-radius:999px;
+
+    .qtyGrid{
+      width:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .qtyField label{
+      font-size:11px;
+      margin-bottom:6px;
+      opacity:.85;
+    }
+    .qtyInput{
+      width:100%;
+      padding:10px 10px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      font-size:14px;
+      text-align:right;
+      font-weight:900;
+    }
+    .addRow{
+      width:100%;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .addBtnWide{
+      width:100%;
       border:none;
+      border-radius: 16px;
+      padding:12px 14px;
       background: var(--accent);
       color:#052e16;
-      display:grid;
-      place-items:center;
+      font-weight:1100;
       cursor:pointer;
       box-shadow: 0 10px 18px rgba(34,197,94,.25);
       -webkit-tap-highlight-color: transparent;
-      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      white-space:nowrap;
     }
-    .addBtn:active{transform:scale(.98)}
+    .addBtnWide:active{transform:scale(.98)}
+
+    .flag{
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      display:inline-grid;
+      place-items:center;
+      overflow:hidden;
+      background:#fff;
+      line-height:1;
+      font-size:14px;
+    }
 
     .bottomBar{
       position:fixed;
@@ -439,20 +485,6 @@
       color:#16a34a;
       white-space:nowrap;
     }
-    .cartMini{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .miniIcon{
-      width:34px;height:34px;border-radius:999px;border:1px solid var(--line);
-      background:#fff;display:grid;place-items:center;cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .miniIcon:active{transform:scale(.98)}
-
     .qtyBoxWrap{
       display:flex;
       align-items:center;
@@ -628,7 +660,7 @@
           <div class="cardHeader">
             <div>
               <h2>Catálogo</h2>
-              <p>Escolha <b>cx</b> ou <b>un</b> e toque no “+”.</p>
+              <p>Digite as quantidades (cx/un) e toque em <b>Adicionar</b>.</p>
             </div>
             <div class="tag" id="countTag">0 itens</div>
           </div>
@@ -749,14 +781,6 @@
         .replaceAll("'","&#039;");
     }
 
-    function svgPlus(){
-      return `
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px">
-          <path d="M12 5v14M5 12h14" stroke="#052e16" stroke-width="2.6" stroke-linecap="round"/>
-        </svg>
-      `;
-    }
-
     function pick(row, keys){
       if(!row) return null;
 
@@ -772,6 +796,87 @@
       }
 
       return null;
+    }
+
+    // =========================
+    // BANDEIRAS (País -> ISO2 -> emoji)
+    // =========================
+    const COUNTRY_ALIASES_TO_ISO2 = new Map([
+      // América
+      ["brasil","BR"],["brazil","BR"],["br","BR"],
+      ["argentina","AR"],["chile","CL"],["uruguai","UY"],["uruguay","UY"],
+      ["eua","US"],["usa","US"],["estados unidos","US"],["united states","US"],["us","US"],
+      ["canada","CA"],["méxico","MX"],["mexico","MX"],["peru","PE"],["colombia","CO"],["colômbia","CO"],
+
+      // Europa
+      ["portugal","PT"],["espanha","ES"],["spain","ES"],
+      ["franca","FR"],["frança","FR"],["france","FR"],
+      ["italia","IT"],["itália","IT"],["italy","IT"],
+      ["alemanha","DE"],["germany","DE"],["deutschland","DE"],
+      ["austria","AT"],["áustria","AT"],["austria","AT"],
+      ["suica","CH"],["suíça","CH"],["switzerland","CH"],
+      ["hungria","HU"],["hungary","HU"],
+      ["georgia","GE"],["geórgia","GE"],
+      ["grecia","GR"],["grécia","GR"],["greece","GR"],
+      ["inglaterra","GB"],["reino unido","GB"],["uk","GB"],["united kingdom","GB"],["grã-bretanha","GB"],["great britain","GB"],
+      ["escocia","GB"],["scotland","GB"],["país de gales","GB"],["wales","GB"],
+      ["irlanda","IE"],["ireland","IE"],
+      ["holanda","NL"],["paises baixos","NL"],["países baixos","NL"],["netherlands","NL"],
+      ["belgica","BE"],["bélgica","BE"],["belgium","BE"],
+
+      // Oceania
+      ["australia","AU"],["austrália","AU"],
+      ["nova zelandia","NZ"],["nova zelândia","NZ"],["new zealand","NZ"],
+
+      // África
+      ["africa do sul","ZA"],["áfrica do sul","ZA"],["south africa","ZA"],
+
+      // Ásia / Oriente Médio
+      ["china","CN"],["japao","JP"],["japão","JP"],["japan","JP"],
+      ["india","IN"],["índia","IN"],["india","IN"],
+      ["libano","LB"],["líbano","LB"],["lebanon","LB"],
+      ["israel","IL"],["turquia","TR"],["turquia","TR"],["turkey","TR"]
+    ]);
+
+    function iso2ToFlagEmoji(iso2){
+      const s = String(iso2 || "").toUpperCase().trim();
+      if(!/^[A-Z]{2}$/.test(s)) return "";
+      const A = 0x1F1E6;
+      const c1 = s.charCodeAt(0) - 65;
+      const c2 = s.charCodeAt(1) - 65;
+      return String.fromCodePoint(A + c1, A + c2);
+    }
+
+    function countryToISO2(countryName){
+      const c = norm(countryName).trim();
+      if(!c) return null;
+
+      // match direto por alias
+      if(COUNTRY_ALIASES_TO_ISO2.has(c)) return COUNTRY_ALIASES_TO_ISO2.get(c);
+
+      // tentativa: remover termos comuns
+      const c2 = c
+        .replace(/\brep(u|ú)blica\b/g,"")
+        .replace(/\bdemocr(a|á)tica\b/g,"")
+        .replace(/\bdo\b|\bda\b|\bdos\b|\bdas\b/g,"")
+        .replace(/\s+/g," ")
+        .trim();
+
+      if(COUNTRY_ALIASES_TO_ISO2.has(c2)) return COUNTRY_ALIASES_TO_ISO2.get(c2);
+
+      return null;
+    }
+
+    function countryFlag(countryName){
+      const iso2 = countryToISO2(countryName);
+      return iso2 ? iso2ToFlagEmoji(iso2) : "";
+    }
+
+    function countryWithFlagLabel(countryName){
+      const f = countryFlag(countryName);
+      const c = String(countryName || "").trim();
+      if(!c) return "";
+      return f ? `${f} ${c}` : c;
     }
 
     // =========================
@@ -823,8 +928,8 @@
     let RENDER_LIMIT = 80;
     function resetLimit(){ RENDER_LIMIT = 80; }
 
-    // Cart: aceita CAIXAS e UNIDADES
-    const cart = []; // { id, boxes, units }
+    // Cart: { id, boxes, units }
+    const cart = [];
 
     // =========================
     // UI ELEMENTS
@@ -862,7 +967,6 @@
       const b = Number(boxes || 0);
       const u = Number(units || 0);
 
-      // custo = (cx * itensPorCx + unidades) * custoUnit
       return perUnit * ((b * unitsPerBox) + u);
     }
 
@@ -883,7 +987,6 @@
         const rows = parsed.data || [];
         const fields = (parsed.meta && parsed.meta.fields) ? parsed.meta.fields : [];
 
-        // Última atualização: coluna "up dated" (fallback: 1ª linha + última coluna)
         if(fields.length && rows.length){
           const want = fields.find(f => norm(f) === "up dated" || norm(f) === "updated");
           if(want){
@@ -951,11 +1054,14 @@
         const discount_max = toNumSmart(pick(w, ["Desconto Máx","Desconto Max","Desconto","desconto","Descon"])) ?? 0;
         const dun_un = toNumSmart(pick(w, ["DUN Un","DUNUn","DUN","Dun Un","DUN Un."])) ?? null;
 
+        const flag = countryFlag(country);
+
         return {
           id: String(id),
           name: String(name),
           brand: String(brand),
           country: String(country),
+          country_flag: flag,
           producer: String(producer),
           category: String(category),
           vintage: vintage,
@@ -977,14 +1083,15 @@
     // =========================
     // FILTERS
     // =========================
-    function fillSelect(el, values){
+    function fillSelect(el, values, formatter){
+      const fmt = formatter || ((v)=> String(v));
       el.innerHTML = `<option value="">Todos</option>` + values
-        .map(v=> `<option value="${escapeHtml(String(v))}">${escapeHtml(String(v))}</option>`).join("");
+        .map(v=> `<option value="${escapeHtml(String(v))}">${escapeHtml(fmt(v))}</option>`).join("");
     }
 
     function buildFilters(){
       fillSelect(catEl, uniq(data.map(d=>d.category)).sort((a,b)=> String(a).localeCompare(String(b))));
-      fillSelect(countryEl, uniq(data.map(d=>d.country)).sort((a,b)=> String(a).localeCompare(String(b))));
+      fillSelect(countryEl, uniq(data.map(d=>d.country)).sort((a,b)=> String(a).localeCompare(String(b))), countryWithFlagLabel);
       fillSelect(grapeEl, uniq(data.map(d=>d.grape)).sort((a,b)=> String(a).localeCompare(String(b))));
       fillSelect(brandEl, uniq(data.map(d=>d.brand)).sort((a,b)=> String(a).localeCompare(String(b))));
       fillSelect(producerEl, uniq(data.map(d=>d.producer)).sort((a,b)=> String(a).localeCompare(String(b))));
@@ -1116,7 +1223,7 @@
 
         const meta = [];
         if(w.category) meta.push(w.category);
-        if(w.country) meta.push(w.country);
+        if(w.country) meta.push(countryWithFlagLabel(w.country));
         if(w.region) meta.push(w.region);
         if(w.grape) meta.push(w.grape);
         if(w.vintage) meta.push("Safra " + w.vintage);
@@ -1126,11 +1233,19 @@
         const dm = fmtDiscountMax(w);
         if(dm) meta.push(dm);
 
+        const flag = w.country_flag ? w.country_flag : "";
+        const flagBadge = w.country ? `
+          <span class="tag" title="${escapeHtml(w.country)}">
+            <span class="flag" aria-hidden="true">${escapeHtml(flag || "🌍")}</span>
+            ${escapeHtml(w.country)}
+          </span>` : ``;
+
         return `
           <div class="item">
             <div style="min-width:0;flex:1">
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
                 <span class="tag">${escapeHtml((w.category||"VINHO").toUpperCase())}</span>
+                ${flagBadge}
                 ${w.size_ml ? `<span class="tag">${escapeHtml(sizeLabelFromML(w.size_ml))}</span>` : ``}
                 ${w.brand ? `<span class="tag">${escapeHtml(w.brand)}</span>` : ``}
                 ${w.producer ? `<span class="tag">${escapeHtml(w.producer)}</span>` : ``}
@@ -1149,14 +1264,26 @@
             </div>
 
             <div class="itemRight">
-              <select class="unitPick" data-unitfor="${escapeHtml(w.id)}" aria-label="Tipo de adição">
-                <option value="cx">cx</option>
-                <option value="un">un</option>
-              </select>
+              <div class="qtyGrid">
+                <div class="qtyField">
+                  <label>qtd cx</label>
+                  <input class="qtyInput" inputmode="numeric" placeholder="0"
+                    data-qcx="${escapeHtml(w.id)}" value="0" />
+                </div>
+                <div class="qtyField">
+                  <label>qtd un</label>
+                  <input class="qtyInput" inputmode="numeric" placeholder="0"
+                    data-qun="${escapeHtml(w.id)}" value="0" />
+                </div>
+              </div>
 
-              <button class="addBtn" type="button" data-add="${escapeHtml(w.id)}" aria-label="Adicionar ${escapeHtml(w.name)}">
-                ${svgPlus()}
+              <button class="addBtnWide" type="button" data-add="${escapeHtml(w.id)}" aria-label="Adicionar ${escapeHtml(w.name)}">
+                Adicionar
               </button>
+
+              <div class="hint" style="margin-top:-4px;text-align:right">
+                dica: digita e toca em <b>Adicionar</b>
+              </div>
             </div>
           </div>
         `;
@@ -1168,10 +1295,22 @@
           const wine = dataMap.get(String(id));
           if(!wine) return;
 
-          const sel = document.querySelector(`select[data-unitfor="${CSS.escape(String(id))}"]`);
-          const kind = sel ? sel.value : "cx";
+          const cxEl = document.querySelector(`input[data-qcx="${CSS.escape(String(id))}"]`);
+          const unEl = document.querySelector(`input[data-qun="${CSS.escape(String(id))}"]`);
 
-          addToCart(wine, kind);
+          const cx = clampInt(Math.round(toNumSmart(cxEl?.value) || 0), 0, 999);
+          const un = clampInt(Math.round(toNumSmart(unEl?.value) || 0), 0, 9999);
+
+          if(cx === 0 && un === 0){
+            // nada pra adicionar
+            return;
+          }
+
+          addToCartQty(wine, cx, un);
+
+          // zera inputs pra facilitar próximo item
+          if(cxEl) cxEl.value = "0";
+          if(unEl) unEl.value = "0";
         });
       });
 
@@ -1188,16 +1327,17 @@
     function showOverlay(el){ el.classList.add("show"); el.setAttribute("aria-hidden","false"); }
     function hideOverlay(el){ el.classList.remove("show"); el.setAttribute("aria-hidden","true"); }
 
-    function addToCart(wine, kind){
+    function addToCartQty(wine, boxesToAdd, unitsToAdd){
       const existing = cart.find(x=>String(x.id)===String(wine.id));
       if(existing){
-        if(kind === "un"){
-          existing.units = clampInt((existing.units || 0) + 1, 0, 9999);
-        } else {
-          existing.boxes = clampInt((existing.boxes || 0) + 1, 0, 999);
-        }
+        existing.boxes = clampInt(Number(existing.boxes||0) + Number(boxesToAdd||0), 0, 999);
+        existing.units = clampInt(Number(existing.units||0) + Number(unitsToAdd||0), 0, 9999);
       }else{
-        cart.push({ id: wine.id, boxes: (kind==="cx" ? 1 : 0), units: (kind==="un" ? 1 : 0) });
+        cart.push({
+          id: wine.id,
+          boxes: clampInt(Number(boxesToAdd||0), 0, 999),
+          units: clampInt(Number(unitsToAdd||0), 0, 9999)
+        });
       }
       updateCartUI(true);
     }
@@ -1205,18 +1345,6 @@
     function removeFromCart(id){
       const idx = cart.findIndex(x=>String(x.id)===String(id));
       if(idx>=0) cart.splice(idx,1);
-      updateCartUI(true);
-    }
-
-    function changeQty(id, field, delta){
-      const line = cart.find(x=>String(x.id)===String(id));
-      if(!line) return;
-
-      if(field === "units"){
-        line.units = clampInt(Number(line.units||0) + delta, 0, 9999);
-      } else {
-        line.boxes = clampInt(Number(line.boxes||0) + delta, 0, 999);
-      }
       updateCartUI(true);
     }
 
@@ -1287,7 +1415,7 @@
           <div class="cartLine">
             <div>
               <b>Pedido vazio</b>
-              <small>Volte no catálogo, escolha cx/un e toque no “+”.</small>
+              <small>Volte no catálogo, digite cx/un e toque em “Adicionar”.</small>
             </div>
             <div class="cartRight"><span class="tag">🍷</span></div>
           </div>
@@ -1304,7 +1432,12 @@
         const unitsPerBox = dun || 1;
 
         const meta = [
-          w.category, w.brand, w.producer, w.country, w.region, w.grape,
+          w.category,
+          w.brand,
+          w.producer,
+          w.country ? countryWithFlagLabel(w.country) : "",
+          w.region,
+          w.grape,
           w.vintage ? ("Safra " + w.vintage) : "",
           w.size_ml ? ("Garrafa " + sizeLabelFromML(w.size_ml)) : "",
           fmtStockAndCxs(w),
@@ -1345,13 +1478,9 @@
                   data-qty="units" data-id="${escapeHtml(line.id)}" />
               </div>
 
-              <div class="cartMini">
-                <button class="miniIcon" type="button" data-dec="boxes" data-id="${escapeHtml(line.id)}" aria-label="Diminuir cx">−</button>
-                <button class="miniIcon" type="button" data-inc="boxes" data-id="${escapeHtml(line.id)}" aria-label="Aumentar cx">+</button>
-                <button class="miniIcon" type="button" data-dec="units" data-id="${escapeHtml(line.id)}" aria-label="Diminuir un">−</button>
-                <button class="miniIcon" type="button" data-inc="units" data-id="${escapeHtml(line.id)}" aria-label="Aumentar un">+</button>
-                <button class="miniIcon" type="button" data-del="${escapeHtml(line.id)}" aria-label="Remover">🗑️</button>
-              </div>
+              <button class="btn" type="button" data-del="${escapeHtml(line.id)}" style="padding:10px 12px">
+                Remover 🗑️
+              </button>
 
               <div class="hint">Unit BRL: ${perUnit==null ? "—" : brl.format(perUnit)}</div>
             </div>
@@ -1359,16 +1488,6 @@
         `;
       }).join("");
 
-      $$("[data-dec]").forEach(b=> b.addEventListener("click", ()=>{
-        const id = b.getAttribute("data-id");
-        const field = b.getAttribute("data-dec");
-        changeQty(id, field, -1);
-      }));
-      $$("[data-inc]").forEach(b=> b.addEventListener("click", ()=>{
-        const id = b.getAttribute("data-id");
-        const field = b.getAttribute("data-inc");
-        changeQty(id, field, +1);
-      }));
       $$("[data-del]").forEach(b=> b.addEventListener("click", ()=> removeFromCart(b.getAttribute("data-del"))));
 
       $$("input[data-qty]").forEach(inp=>{
@@ -1382,7 +1501,6 @@
     function updateCartUI(rerenderSheet){
       const t = cartTotals();
 
-      // Mantive o badge como “itens totais” (cxs + un) pra ficar simples no topo
       byId("cartCount").textContent = String((t.totalBoxes || 0) + (t.totalUnits || 0));
       byId("cartMiniTotal").textContent = brl.format(t.totalCost || 0);
 
@@ -1462,8 +1580,9 @@
         const costLine = lineCostBRL(w, boxes, unitsExtra);
         const costTxt = costLine==null ? "—" : brl.format(costLine);
 
+        const countryTxt = w.country ? countryWithFlagLabel(w.country) : "";
         const meta = [
-          w.category, w.brand, w.producer, w.country, w.region, w.grape,
+          w.category, w.brand, w.producer, countryTxt, w.region, w.grape,
           w.vintage ? ("Safra " + w.vintage) : "",
           w.size_ml ? ("Garrafa " + sizeLabelFromML(w.size_ml)) : "",
           `Itens/cx ${unitsPerBox}`
