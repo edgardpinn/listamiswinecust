@@ -181,15 +181,39 @@
       gap:10px;
     }
 
+    /* ===== ITEM (CATÁLOGO) — layout corrigido ===== */
     .item{
       border:1px solid var(--line);
       border-radius: 16px;
       padding:12px;
       display:flex;
-      gap:10px;
-      align-items:flex-start;
+      gap:12px;
+      align-items:stretch;
       background:#fff;
     }
+    .itemLeft{
+      flex:1 1 auto;
+      min-width:0;
+    }
+    .itemRight{
+      flex:0 0 auto;
+      width: 230px;            /* desktop */
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:stretch;
+    }
+
+    @media (max-width: 640px){
+      .item{
+        flex-direction:column; /* mobile: vira 1 coluna */
+        gap:12px;
+      }
+      .itemRight{
+        width:100%;
+      }
+    }
+
     .tag{
       display:inline-flex;
       align-items:center;
@@ -234,26 +258,17 @@
       font-weight:900;
     }
 
-    .itemRight{
-      margin-left:auto;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      align-items:flex-end;
-      flex:0 0 auto;
-      min-width: 210px;
-    }
-
-    .unitPick{
-      width:auto;
-      min-width:86px;
-      padding:10px 10px;
-      border-radius: 14px;
+    .flag{
+      width:18px;
+      height:18px;
+      border-radius:999px;
       border:1px solid var(--line);
+      display:inline-grid;
+      place-items:center;
+      overflow:hidden;
       background:#fff;
-      color:#111827;
-      font-size:13px;
-      font-weight:900;
+      line-height:1;
+      font-size:14px;
     }
 
     .qtyGrid{
@@ -276,13 +291,6 @@
       text-align:right;
       font-weight:900;
     }
-    .addRow{
-      width:100%;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:flex-end;
-    }
     .addBtnWide{
       width:100%;
       border:none;
@@ -301,19 +309,6 @@
       white-space:nowrap;
     }
     .addBtnWide:active{transform:scale(.98)}
-
-    .flag{
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      display:inline-grid;
-      place-items:center;
-      overflow:hidden;
-      background:#fff;
-      line-height:1;
-      font-size:14px;
-    }
 
     .bottomBar{
       position:fixed;
@@ -660,7 +655,7 @@
           <div class="cardHeader">
             <div>
               <h2>Catálogo</h2>
-              <p>Digite as quantidades (cx/un) e toque em <b>Adicionar</b>.</p>
+              <p>Digite cx/un e toque em <b>Adicionar</b>.</p>
             </div>
             <div class="tag" id="countTag">0 itens</div>
           </div>
@@ -799,43 +794,33 @@
     }
 
     // =========================
-    // BANDEIRAS (País -> ISO2 -> emoji)
+    // BANDEIRAS
     // =========================
     const COUNTRY_ALIASES_TO_ISO2 = new Map([
-      // América
       ["brasil","BR"],["brazil","BR"],["br","BR"],
       ["argentina","AR"],["chile","CL"],["uruguai","UY"],["uruguay","UY"],
       ["eua","US"],["usa","US"],["estados unidos","US"],["united states","US"],["us","US"],
       ["canada","CA"],["méxico","MX"],["mexico","MX"],["peru","PE"],["colombia","CO"],["colômbia","CO"],
-
-      // Europa
       ["portugal","PT"],["espanha","ES"],["spain","ES"],
       ["franca","FR"],["frança","FR"],["france","FR"],
       ["italia","IT"],["itália","IT"],["italy","IT"],
       ["alemanha","DE"],["germany","DE"],["deutschland","DE"],
-      ["austria","AT"],["áustria","AT"],["austria","AT"],
+      ["austria","AT"],["áustria","AT"],
       ["suica","CH"],["suíça","CH"],["switzerland","CH"],
       ["hungria","HU"],["hungary","HU"],
       ["georgia","GE"],["geórgia","GE"],
       ["grecia","GR"],["grécia","GR"],["greece","GR"],
       ["inglaterra","GB"],["reino unido","GB"],["uk","GB"],["united kingdom","GB"],["grã-bretanha","GB"],["great britain","GB"],
-      ["escocia","GB"],["scotland","GB"],["país de gales","GB"],["wales","GB"],
       ["irlanda","IE"],["ireland","IE"],
       ["holanda","NL"],["paises baixos","NL"],["países baixos","NL"],["netherlands","NL"],
       ["belgica","BE"],["bélgica","BE"],["belgium","BE"],
-
-      // Oceania
       ["australia","AU"],["austrália","AU"],
       ["nova zelandia","NZ"],["nova zelândia","NZ"],["new zealand","NZ"],
-
-      // África
       ["africa do sul","ZA"],["áfrica do sul","ZA"],["south africa","ZA"],
-
-      // Ásia / Oriente Médio
       ["china","CN"],["japao","JP"],["japão","JP"],["japan","JP"],
-      ["india","IN"],["índia","IN"],["india","IN"],
+      ["india","IN"],["índia","IN"],
       ["libano","LB"],["líbano","LB"],["lebanon","LB"],
-      ["israel","IL"],["turquia","TR"],["turquia","TR"],["turkey","TR"]
+      ["israel","IL"],["turquia","TR"],["turkey","TR"]
     ]);
 
     function iso2ToFlagEmoji(iso2){
@@ -850,11 +835,8 @@
     function countryToISO2(countryName){
       const c = norm(countryName).trim();
       if(!c) return null;
-
-      // match direto por alias
       if(COUNTRY_ALIASES_TO_ISO2.has(c)) return COUNTRY_ALIASES_TO_ISO2.get(c);
 
-      // tentativa: remover termos comuns
       const c2 = c
         .replace(/\brep(u|ú)blica\b/g,"")
         .replace(/\bdemocr(a|á)tica\b/g,"")
@@ -863,7 +845,6 @@
         .trim();
 
       if(COUNTRY_ALIASES_TO_ISO2.has(c2)) return COUNTRY_ALIASES_TO_ISO2.get(c2);
-
       return null;
     }
 
@@ -880,7 +861,7 @@
     }
 
     // =========================
-    // TAMANHO (ml / L)
+    // TAMANHO
     // =========================
     function parseBottleSizeML(text){
       const s = String(text||"").toLowerCase().replace(/\s+/g," ").trim();
@@ -919,7 +900,7 @@
     }
 
     // =========================
-    // STATE + PERF
+    // STATE
     // =========================
     let data = [];
     let dataMap = new Map();
@@ -928,8 +909,7 @@
     let RENDER_LIMIT = 80;
     function resetLimit(){ RENDER_LIMIT = 80; }
 
-    // Cart: { id, boxes, units }
-    const cart = [];
+    const cart = []; // { id, boxes, units }
 
     // =========================
     // UI ELEMENTS
@@ -971,7 +951,7 @@
     }
 
     // =========================
-    // LOAD CSV + Última atualização
+    // LOAD CSV
     // =========================
     async function loadData(){
       try{
@@ -1015,7 +995,7 @@
         console.error(err);
         byId("list").innerHTML = `
           <div class="item" style="border-color:#fecaca;background:#fff1f2">
-            <div style="flex:1">
+            <div class="itemLeft">
               <p class="name" style="color:#7f1d1d">Erro carregando wines_catalog.csv</p>
               <div class="meta">
                 <span>• Confirma se <b>wines_catalog.csv</b> está publicado na raiz do site.</span>
@@ -1054,14 +1034,12 @@
         const discount_max = toNumSmart(pick(w, ["Desconto Máx","Desconto Max","Desconto","desconto","Descon"])) ?? 0;
         const dun_un = toNumSmart(pick(w, ["DUN Un","DUNUn","DUN","Dun Un","DUN Un."])) ?? null;
 
-        const flag = countryFlag(country);
-
         return {
           id: String(id),
           name: String(name),
           brand: String(brand),
           country: String(country),
-          country_flag: flag,
+          country_flag: countryFlag(country),
           producer: String(producer),
           category: String(category),
           vintage: vintage,
@@ -1070,7 +1048,6 @@
           stock: Number(stock),
           size_ml,
           base_cost: Number(base_cost || 0),
-
           discount_max: Number(discount_max || 0),
           dun_un: (dun_un==null ? null : Number(dun_un))
         };
@@ -1127,7 +1104,7 @@
     });
 
     // =========================
-    // APPLY FILTERS + SORT
+    // FILTERS + SORT
     // =========================
     function applyFilters(arr){
       const q = norm(qEl.value);
@@ -1179,7 +1156,7 @@
     }
 
     // =========================
-    // RENDER (lazy)
+    // RENDER
     // =========================
     function renderMoreButton(total){
       const list = byId("list");
@@ -1222,19 +1199,17 @@
         const c = unitCostBRL(w);
 
         const meta = [];
-        if(w.category) meta.push(w.category);
         if(w.country) meta.push(countryWithFlagLabel(w.country));
         if(w.region) meta.push(w.region);
         if(w.grape) meta.push(w.grape);
         if(w.vintage) meta.push("Safra " + w.vintage);
         if(w.size_ml) meta.push("Garrafa " + sizeLabelFromML(w.size_ml));
         meta.push(fmtStockAndCxs(w));
-
         const dm = fmtDiscountMax(w);
         if(dm) meta.push(dm);
 
         const flag = w.country_flag ? w.country_flag : "";
-        const flagBadge = w.country ? `
+        const countryTag = w.country ? `
           <span class="tag" title="${escapeHtml(w.country)}">
             <span class="flag" aria-hidden="true">${escapeHtml(flag || "🌍")}</span>
             ${escapeHtml(w.country)}
@@ -1242,16 +1217,16 @@
 
         return `
           <div class="item">
-            <div style="min-width:0;flex:1">
+            <div class="itemLeft">
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
                 <span class="tag">${escapeHtml((w.category||"VINHO").toUpperCase())}</span>
-                ${flagBadge}
+                ${countryTag}
                 ${w.size_ml ? `<span class="tag">${escapeHtml(sizeLabelFromML(w.size_ml))}</span>` : ``}
                 ${w.brand ? `<span class="tag">${escapeHtml(w.brand)}</span>` : ``}
                 ${w.producer ? `<span class="tag">${escapeHtml(w.producer)}</span>` : ``}
               </div>
 
-              <p class="name">${escapeHtml(w.name)}</p>
+              <p class="name" style="margin-top:8px">${escapeHtml(w.name)}</p>
 
               <div class="meta">
                 ${meta.map(x=>`<span>• ${escapeHtml(x)}</span>`).join("")}
@@ -1301,14 +1276,10 @@
           const cx = clampInt(Math.round(toNumSmart(cxEl?.value) || 0), 0, 999);
           const un = clampInt(Math.round(toNumSmart(unEl?.value) || 0), 0, 9999);
 
-          if(cx === 0 && un === 0){
-            // nada pra adicionar
-            return;
-          }
+          if(cx === 0 && un === 0) return;
 
           addToCartQty(wine, cx, un);
 
-          // zera inputs pra facilitar próximo item
           if(cxEl) cxEl.value = "0";
           if(unEl) unEl.value = "0";
         });
@@ -1319,7 +1290,7 @@
     }
 
     // =========================
-    // CART (cxs + unidades)
+    // CART
     // =========================
     const cartOverlay = byId("cartOverlay");
     const cartList = byId("cartList");
@@ -1500,7 +1471,6 @@
 
     function updateCartUI(rerenderSheet){
       const t = cartTotals();
-
       byId("cartCount").textContent = String((t.totalBoxes || 0) + (t.totalUnits || 0));
       byId("cartMiniTotal").textContent = brl.format(t.totalCost || 0);
 
